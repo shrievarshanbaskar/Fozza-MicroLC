@@ -1,0 +1,17 @@
+{
+  "description": "XRPL feedback Stop hook.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /ABSOLUTE/PATH/TO/hook/agents/codex/stop-hook.mjs",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

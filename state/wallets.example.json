@@ -1,0 +1,38 @@
+{
+  "network": "xrpl:1",
+  "rpc_url": "https://s.altnet.rippletest.net:51234/",
+  "currency": "524C555344000000000000000000000000000000",
+  "currency_display": "RLUSD",
+  "wallets": {
+    "issuer": {
+      "address": "rISSUER_ADDRESS_PLACEHOLDER",
+      "seed": "sPLACEHOLDER_NEVER_COMMIT_REAL_SEEDS",
+      "public_key": "ED_PLACEHOLDER",
+      "explorer": "https://testnet.xrpl.org/accounts/rISSUER_ADDRESS_PLACEHOLDER"
+    },
+    "buyer": {
+      "address": "rBUYER_ADDRESS_PLACEHOLDER",
+      "seed": "sPLACEHOLDER_NEVER_COMMIT_REAL_SEEDS",
+      "public_key": "ED_PLACEHOLDER",
+      "explorer": "https://testnet.xrpl.org/accounts/rBUYER_ADDRESS_PLACEHOLDER"
+    },
+    "seller": {
+      "address": "rSELLER_ADDRESS_PLACEHOLDER",
+      "seed": "sPLACEHOLDER_NEVER_COMMIT_REAL_SEEDS",
+      "public_key": "ED_PLACEHOLDER",
+      "explorer": "https://testnet.xrpl.org/accounts/rSELLER_ADDRESS_PLACEHOLDER"
+    },
+    "platform": {
+      "address": "rPLATFORM_ADDRESS_PLACEHOLDER",
+      "seed": "sPLACEHOLDER_NEVER_COMMIT_REAL_SEEDS",
+      "public_key": "ED_PLACEHOLDER",
+      "explorer": "https://testnet.xrpl.org/accounts/rPLATFORM_ADDRESS_PLACEHOLDER"
+    },
+    "oracle": {
+      "address": "rORACLE_ADDRESS_PLACEHOLDER",
+      "seed": "sPLACEHOLDER_NEVER_COMMIT_REAL_SEEDS",
+      "public_key": "ED_PLACEHOLDER",
+      "explorer": "https://testnet.xrpl.org/accounts/rORACLE_ADDRESS_PLACEHOLDER"
+    }
+  }
+}

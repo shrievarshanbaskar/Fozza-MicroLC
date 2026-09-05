@@ -1,0 +1,180 @@
+{
+  "preset": "discrepant",
+  "k_examiner": 2,
+  "k_final": 2,
+  "route": "negotiable",
+  "status": "CLOSED",
+  "agreed_rungs": 2,
+  "payout": {
+    "m": 2,
+    "refused": false,
+    "lc_amount": "10000",
+    "locked": "10100",
+    "seller": "9800",
+    "platform": "100",
+    "buyer_returned": "200",
+    "rungs_released": 3,
+    "discount_pct": "2"
+  },
+  "wall_seconds": 13.81,
+  "verifier": {
+    "triggered": true,
+    "reason": "disputed value 100.00 RLUSD >= 20x cheapest query (1.00)",
+    "provider": "harbor-ais",
+    "budget": {
+      "calls": 1,
+      "spent_rlusd": "0.05",
+      "max_calls": 3,
+      "max_spend_rlusd": "0.25",
+      "log": [
+        {
+          "provider": "harbor-ais",
+          "price": "0.05",
+          "tx_hash": "1B68E959E43629396882C0EFE5425695080AE6E2F0492499D35C82CDDB72561C"
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "rule_id": "R15",
+      "verdict": "CONFIRMS",
+      "summary": "oracle ATD 2026-08-23 equals the B/L on-board date; shipment was late by evidence",
+      "provider": "harbor-ais",
+      "tx_hash": "1B68E959E43629396882C0EFE5425695080AE6E2F0492499D35C82CDDB72561C",
+      "price_rlusd": "0.05",
+      "telemetry": {
+        "vessel": "MV Sagar Kranti",
+        "voyage": "SK-0917E",
+        "container_number": "TCLU7702410",
+        "atd": "2026-08-23",
+        "port_of_loading": "Tuticorin, India",
+        "port_of_discharge": "Singapore"
+      },
+      "signature": "6555F5055A5BBF4D67939A68258FE70F623FF0B4899EF607E5CBCF8E79E3FF59D51DA479714CAC611D096A5063C08553B914B3C637C1C49562C1A253B0072001"
+    }
+  ],
+  "events": [
+    {
+      "ts_ms": 1788556161915,
+      "round": 0,
+      "actor": "verifier",
+      "action": "discover",
+      "rungs": null,
+      "cited": [
+        "R15"
+      ],
+      "rationale": "2 providers: harbor-ais@0.05 RLUSD/450ms, portlog-premium@0.20 RLUSD/120ms",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556161915,
+      "round": 0,
+      "actor": "verifier",
+      "action": "decide",
+      "rungs": null,
+      "cited": [],
+      "rationale": "chose harbor-ais at 0.05 RLUSD (450ms): cheapest provider covering ['atd']; alternatives ['portlog-premium@0.20']",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556172760,
+      "round": 0,
+      "actor": "verifier",
+      "action": "pay",
+      "rungs": null,
+      "cited": [
+        "1B68E959E43629396882C0EFE5425695080AE6E2F0492499D35C82CDDB72561C"
+      ],
+      "rationale": "paid 0.05 RLUSD to harbor-ais via x402 (tx 1B68E959E43629396882C0EFE5425695080AE6E2F0492499D35C82CDDB72561C) in 10818ms",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556172760,
+      "round": 0,
+      "actor": "verifier",
+      "action": "verify",
+      "rungs": null,
+      "cited": [
+        "R15"
+      ],
+      "rationale": "R15 CONFIRMS: oracle ATD 2026-08-23 equals the B/L on-board date; shipment was late by evidence",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556172762,
+      "round": 0,
+      "actor": "system",
+      "action": "route",
+      "rungs": 2,
+      "cited": [
+        "R09",
+        "R15"
+      ],
+      "rationale": "k=2 -> negotiable",
+      "valid": true,
+      "latency_ms": null
+    },
+    {
+      "ts_ms": 1788556173777,
+      "round": 1,
+      "actor": "buyer",
+      "action": "propose",
+      "rungs": 3,
+      "cited": [
+        "R09",
+        "R15"
+      ],
+      "rationale": "Opening offer requests 3 rungs (3% discount) to test the referee, citing both identified discrepancies.",
+      "valid": false,
+      "latency_ms": 1012
+    },
+    {
+      "ts_ms": 1788556173778,
+      "round": 1,
+      "actor": "referee",
+      "action": "bounce",
+      "rungs": 3,
+      "cited": [
+        "R09",
+        "R15"
+      ],
+      "rationale": "buyer offer rejected: rungs 3 outside the evidenced ceiling [0, 2]",
+      "valid": true,
+      "latency_ms": null
+    },
+    {
+      "ts_ms": 1788556174434,
+      "round": 1,
+      "actor": "buyer",
+      "action": "propose",
+      "rungs": 2,
+      "cited": [
+        "R09",
+        "R15"
+      ],
+      "rationale": "Offer the maximum lawful discount of 2 rungs (2% = 200 RLUSD) covering both identified discrepancies.",
+      "valid": false,
+      "latency_ms": 654
+    },
+    {
+      "ts_ms": 1788556175297,
+      "round": 1,
+      "actor": "seller",
+      "action": "accept",
+      "rungs": 2,
+      "cited": [],
+      "rationale": "Demurrage $600 exceeds the 200 RLUSD discount (2 rungs), so accepting the buyer's 2\u2011rung offer avoids greater loss.",
+      "valid": false,
+      "latency_ms": 860
+    }
+  ],
+  "refusal_notice": null,
+  "balances": {
+    "payer_rlusd_before": "1020",
+    "payer_rlusd_after": "1019.95",
+    "oracle_rlusd_before": "0",
+    "oracle_rlusd_after": "0.05"
+  },
+  "agents_cited_evidence": false
+}

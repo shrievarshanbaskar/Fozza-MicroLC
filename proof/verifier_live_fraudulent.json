@@ -1,0 +1,154 @@
+{
+  "preset": "fraudulent",
+  "k_examiner": 1,
+  "k_final": 2,
+  "route": "refuse",
+  "status": "REFUSED",
+  "agreed_rungs": null,
+  "payout": {
+    "m": 6,
+    "refused": true,
+    "lc_amount": "10000",
+    "locked": "10100",
+    "seller": "0",
+    "platform": "0",
+    "buyer_returned": "10100",
+    "rungs_released": 0,
+    "discount_pct": "0"
+  },
+  "wall_seconds": 15.38,
+  "verifier": {
+    "triggered": true,
+    "reason": "disputed value 100.00 RLUSD >= 20x cheapest query (1.00)",
+    "provider": "harbor-ais",
+    "budget": {
+      "calls": 1,
+      "spent_rlusd": "0.05",
+      "max_calls": 3,
+      "max_spend_rlusd": "0.25",
+      "log": [
+        {
+          "provider": "harbor-ais",
+          "price": "0.05",
+          "tx_hash": "5A3372B1BD9211305FAB0B04ECD5870F10D0A0472E1BBEF41C50AE5000878D7E"
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "rule_id": "R19",
+      "verdict": "MISMATCH",
+      "summary": "carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti",
+      "provider": "harbor-ais",
+      "tx_hash": "5A3372B1BD9211305FAB0B04ECD5870F10D0A0472E1BBEF41C50AE5000878D7E",
+      "price_rlusd": "0.05",
+      "telemetry": {
+        "vessel": "MV Ocean Pioneer",
+        "voyage": "OP-2231W",
+        "container_number": "TCLU7702410",
+        "atd": "2026-08-18",
+        "port_of_loading": "Tuticorin, India",
+        "port_of_discharge": "Singapore"
+      },
+      "signature": "AB47BA2CC14608A62BBD7EAAF6B17C007139C062A6EA3304578A1DD8569075BDFEE4CB2E5A72FDFA71526DAE6566966497E1394A30E56442AD9D828298E3D200"
+    }
+  ],
+  "events": [
+    {
+      "ts_ms": 1788556208863,
+      "round": 0,
+      "actor": "verifier",
+      "action": "discover",
+      "rungs": null,
+      "cited": [
+        "R19"
+      ],
+      "rationale": "2 providers: harbor-ais@0.05 RLUSD/450ms, portlog-premium@0.20 RLUSD/120ms",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556208863,
+      "round": 0,
+      "actor": "verifier",
+      "action": "decide",
+      "rungs": null,
+      "cited": [],
+      "rationale": "chose harbor-ais at 0.05 RLUSD (450ms): cheapest provider covering ['container_number', 'vessel']; alternatives ['portlog-premium@0.20']",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556222715,
+      "round": 0,
+      "actor": "verifier",
+      "action": "pay",
+      "rungs": null,
+      "cited": [
+        "5A3372B1BD9211305FAB0B04ECD5870F10D0A0472E1BBEF41C50AE5000878D7E"
+      ],
+      "rationale": "paid 0.05 RLUSD to harbor-ais via x402 (tx 5A3372B1BD9211305FAB0B04ECD5870F10D0A0472E1BBEF41C50AE5000878D7E) in 13822ms",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556222715,
+      "round": 0,
+      "actor": "verifier",
+      "action": "verify",
+      "rungs": null,
+      "cited": [
+        "R19"
+      ],
+      "rationale": "R19 MISMATCH: carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556222715,
+      "round": 0,
+      "actor": "verifier",
+      "action": "adjust",
+      "rungs": 2,
+      "cited": [
+        "R19",
+        "R20"
+      ],
+      "rationale": "k 1 -> 2; FRAUD_SUSPECTED raised",
+      "valid": true
+    },
+    {
+      "ts_ms": 1788556222717,
+      "round": 0,
+      "actor": "system",
+      "action": "route",
+      "rungs": 2,
+      "cited": [
+        "R19",
+        "R20"
+      ],
+      "rationale": "k=2 -> refuse",
+      "valid": true,
+      "latency_ms": null
+    },
+    {
+      "ts_ms": 1788556223840,
+      "round": 0,
+      "actor": "system",
+      "action": "refuse",
+      "rungs": null,
+      "cited": [
+        "R19",
+        "R20"
+      ],
+      "rationale": "NOTICE OF REFUSAL \u2014 credit MLC-SG-2026-0142\nWe have examined the presentation and refuse to honour it under UCP 600 Art. 16(c). Discrepancies:\n- R19 CONTAINER_MISMATCH (UCP600-14d): Container on packing list differs from the bill of lading.\n- R20 FRAUD_SUSPECTED (UCP600-34): Carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states MV Sagar Kranti.\nAll documents are held at the pres",
+      "valid": true,
+      "latency_ms": null
+    }
+  ],
+  "refusal_notice": "NOTICE OF REFUSAL \u2014 credit MLC-SG-2026-0142\nWe have examined the presentation and refuse to honour it under UCP 600 Art. 16(c). Discrepancies:\n- R19 CONTAINER_MISMATCH (UCP600-14d): Container on packing list differs from the bill of lading.\n- R20 FRAUD_SUSPECTED (UCP600-34): Carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states MV Sagar Kranti.\nAll documents are held at the presenter\u2019s disposal and escrowed funds will be returned to the applicant at expiry.",
+  "balances": {
+    "payer_rlusd_before": "1019.95",
+    "payer_rlusd_after": "1019.9",
+    "oracle_rlusd_before": "0.05",
+    "oracle_rlusd_after": "0.1"
+  },
+  "agents_cited_evidence": false
+}

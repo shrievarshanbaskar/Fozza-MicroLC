@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node /ABSOLUTE/PATH/TO/hook/agents/vscode-copilot/stop-hook.mjs",
+        "timeout": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+# Team: Fozza · Product: MicroLC — backend requirements
+# FastAPI/uvicorn are pinned to the range required by the XRPL AI Starter Kit's
+# x402-xrpl package (fastapi<0.116, uvicorn<0.31). Both ranges support lifespan,
+# StreamingResponse (SSE) and CORSMiddleware, so the whole project shares one venv.
+fastapi>=0.115,<0.116
+uvicorn[standard]>=0.30,<0.31
+x402-xrpl>=0.3.3
+xrpl-py>=4.1.0
+pydantic>=2,<3
+python-dotenv>=1,<2
+python-multipart>=0.0.9
+httpx>=0.28.1
+reportlab>=4.0
+pypdf>=4.0
+groq>=0.11
+langgraph>=1.0
+langchain-groq>=1.0
+langchain-core>=1.0
+pytest>=8

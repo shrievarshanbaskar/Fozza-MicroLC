@@ -1,0 +1,51 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# node / next
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/test-results/
+frontend/playwright-report/
+
+# runtime state (wallet seeds live here)
+state/*
+!state/wallets.example.json
+!state/.gitkeep
+
+# generated artifacts
+docs/generated/
+scratch/
+tmp/
+*.log
+screenshots/
+*.png
+*.jpg
+!frontend/public/**/*.png
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# vendored repos cloned by the xrpl-agentic-resources skill refresh (not ours)
+.claude/skills/xrpl-agentic-resources/ows/
+.claude/skills/xrpl-agentic-resources/rlusd-skills/
+.claude/skills/xrpl-agentic-resources/x402-secure/
+.claude/skills/xrpl-agentic-resources/xrpl-dev-portal/
+.claude/skills/xrpl-agentic-resources/XRPL-Standards/
+.claude/settings.local.json

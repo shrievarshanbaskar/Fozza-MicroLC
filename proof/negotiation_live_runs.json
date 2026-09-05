@@ -1,0 +1,422 @@
+[
+  {
+    "run": 1,
+    "k": 2,
+    "agreed_rungs": 2,
+    "payout": {
+      "m": 2,
+      "refused": false,
+      "lc_amount": "10000",
+      "locked": "10100",
+      "seller": "9800",
+      "platform": "100",
+      "buyer_returned": "200",
+      "rungs_released": 3,
+      "discount_pct": "2"
+    },
+    "wall_seconds": 3.11,
+    "legal": true,
+    "visible_bounce": true,
+    "all_llm_calls_ok": true,
+    "events": [
+      {
+        "ts_ms": 1788555534458,
+        "round": 0,
+        "actor": "system",
+        "action": "route",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "k=2 -> negotiable",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555535187,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "Opening anchor exceeds the maximum of 2 rungs to trigger a referee bounce while citing all identified discrepancies.",
+        "valid": false,
+        "latency_ms": 728
+      },
+      {
+        "ts_ms": 1788555535188,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "buyer offer rejected: rungs 3 outside the evidenced ceiling [0, 2]",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555535880,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "Offer the maximum lawful discount of 2 rungs (2% = 200 RLUSD) covering both identified discrepancies.",
+        "valid": false,
+        "latency_ms": 691
+      },
+      {
+        "ts_ms": 1788555536420,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage $600 exceeds 200 RLUSD discount, so accepting 2 rungs avoids greater loss.",
+        "valid": false,
+        "latency_ms": 537
+      },
+      {
+        "ts_ms": 1788555536422,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "seller offer rejected: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555537551,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage $600 exceeds the 200 RLUSD discount value, so accepting the buyer's 2\u2011rung offer is financially preferable.",
+        "valid": false,
+        "latency_ms": 1127
+      },
+      {
+        "ts_ms": 1788555537555,
+        "round": 1,
+        "actor": "referee",
+        "action": "clamped",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "seller offer clamped: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555537551,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "[clamped] Demurrage $600 exceeds the 200 RLUSD discount value, so accepting the buyer's 2\u2011rung offer is financially preferable.",
+        "valid": true,
+        "latency_ms": 1127
+      }
+    ],
+    "llm_calls": 4
+  },
+  {
+    "run": 2,
+    "k": 2,
+    "agreed_rungs": 2,
+    "payout": {
+      "m": 2,
+      "refused": false,
+      "lc_amount": "10000",
+      "locked": "10100",
+      "seller": "9800",
+      "platform": "100",
+      "buyer_returned": "200",
+      "rungs_released": 3,
+      "discount_pct": "2"
+    },
+    "wall_seconds": 3.21,
+    "legal": true,
+    "visible_bounce": true,
+    "all_llm_calls_ok": true,
+    "events": [
+      {
+        "ts_ms": 1788555599393,
+        "round": 0,
+        "actor": "system",
+        "action": "route",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "k=2 -> negotiable",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555600116,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "Opening anchor exceeds the max allowed (k=2) to test the referee, citing both discrepancies.",
+        "valid": false,
+        "latency_ms": 722
+      },
+      {
+        "ts_ms": 1788555600117,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "buyer offer rejected: rungs 3 outside the evidenced ceiling [0, 2]",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555600833,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "We propose the maximum lawful discount of 2 rungs (2%) covering both identified discrepancies.",
+        "valid": false,
+        "latency_ms": 714
+      },
+      {
+        "ts_ms": 1788555601745,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage $600 exceeds the 200 RLUSD value of 2 rungs, so accepting the buyer's 2\u2011rung offer avoids higher loss.",
+        "valid": false,
+        "latency_ms": 910
+      },
+      {
+        "ts_ms": 1788555601746,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "seller offer rejected: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555602596,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage cost $600 exceeds the $200 value of 2 rungs, so accepting the buyer's 2\u2011rung offer is financially optimal.",
+        "valid": false,
+        "latency_ms": 849
+      },
+      {
+        "ts_ms": 1788555602597,
+        "round": 1,
+        "actor": "referee",
+        "action": "clamped",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "seller offer clamped: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555602596,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "[clamped] Demurrage cost $600 exceeds the $200 value of 2 rungs, so accepting the buyer's 2\u2011rung offer is financially optimal.",
+        "valid": true,
+        "latency_ms": 849
+      }
+    ],
+    "llm_calls": 4
+  },
+  {
+    "run": 3,
+    "k": 2,
+    "agreed_rungs": 2,
+    "payout": {
+      "m": 2,
+      "refused": false,
+      "lc_amount": "10000",
+      "locked": "10100",
+      "seller": "9800",
+      "platform": "100",
+      "buyer_returned": "200",
+      "rungs_released": 3,
+      "discount_pct": "2"
+    },
+    "wall_seconds": 2.98,
+    "legal": true,
+    "visible_bounce": true,
+    "all_llm_calls_ok": true,
+    "events": [
+      {
+        "ts_ms": 1788555664466,
+        "round": 0,
+        "actor": "system",
+        "action": "route",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "k=2 -> negotiable",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555665159,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "Opening anchor above the ceiling to trigger a bounce, citing both identified discrepancies.",
+        "valid": false,
+        "latency_ms": 692
+      },
+      {
+        "ts_ms": 1788555665161,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 3,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "buyer offer rejected: rungs 3 outside the evidenced ceiling [0, 2]",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555665793,
+        "round": 1,
+        "actor": "buyer",
+        "action": "propose",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "Offer the maximum lawful discount of 2 rungs (200 RLUSD) citing both identified discrepancies.",
+        "valid": false,
+        "latency_ms": 630
+      },
+      {
+        "ts_ms": 1788555666501,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage cost $600 exceeds the 200 RLUSD discount, so we accept the buyer's 2\u2011rung offer.",
+        "valid": false,
+        "latency_ms": 706
+      },
+      {
+        "ts_ms": 1788555666503,
+        "round": 1,
+        "actor": "referee",
+        "action": "bounce",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "seller offer rejected: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555667434,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [],
+        "rationale": "Demurrage $600 exceeds the $200 RLUSD discount (2 rungs), so accepting the buyer's 2\u2011rung offer is financially optimal.",
+        "valid": false,
+        "latency_ms": 929
+      },
+      {
+        "ts_ms": 1788555667435,
+        "round": 1,
+        "actor": "referee",
+        "action": "clamped",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "seller offer clamped: rungs > 0 must cite at least one discrepancy rule_id",
+        "valid": true,
+        "latency_ms": null
+      },
+      {
+        "ts_ms": 1788555667434,
+        "round": 1,
+        "actor": "seller",
+        "action": "accept",
+        "rungs": 2,
+        "cited": [
+          "R09",
+          "R15"
+        ],
+        "rationale": "[clamped] Demurrage $600 exceeds the $200 RLUSD discount (2 rungs), so accepting the buyer's 2\u2011rung offer is financially optimal.",
+        "valid": true,
+        "latency_ms": 929
+      }
+    ],
+    "llm_calls": 4
+  }
+]

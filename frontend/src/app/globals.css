@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html.dark { color-scheme: dark; }
+* { transition-timing-function: cubic-bezier(.4, 0, .2, 1); transition-duration: 300ms; }
+body { @apply font-sans text-base antialiased; }
+
+@layer components {
+  /* console (dark) */
+  .card { @apply rounded-card border border-white/[0.06] bg-white/[0.03] backdrop-blur-md; }
+  .card-head { @apply flex items-center justify-between gap-2 border-b border-white/[0.06] px-4 py-2.5; }
+  .micro { @apply text-[10px] uppercase tracking-widest font-bold; }
+  .muted { color: rgba(255, 255, 255, 0.4); }
+  .btn-primary { @apply rounded-btn bg-primary px-4 py-2 text-sm font-semibold text-white shadow-primary hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40; }
+  .btn-ghost { @apply rounded-btn border border-white/10 px-3 py-1.5 text-sm text-white/80 hover:bg-white/[0.06] disabled:opacity-40; }
+  .badge { @apply inline-flex items-center rounded-badge px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest; }
+  .mono { @apply font-mono text-xs; }
+  .skeleton { @apply rounded-btn bg-white/5 animate-pulse; }
+  /* landing (light) */
+  .l-card { @apply rounded-card border border-ink/[0.08] bg-white shadow-standard; }
+  .l-btn-primary { @apply inline-flex items-center gap-2 rounded-btn bg-primary px-6 py-3 text-base font-semibold text-white shadow-primary hover:bg-primary-hover; }
+}
+iframe { color-scheme: light; }

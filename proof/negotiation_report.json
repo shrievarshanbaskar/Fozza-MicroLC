@@ -1,0 +1,1696 @@
+{
+  "runs": [
+    {
+      "preset": "clean",
+      "deal_id": "clea-57362",
+      "examination": {
+        "lc_number": "MLC-SG-2026-0142",
+        "parser": "groq",
+        "presentation_date": "2026-09-05",
+        "discrepancies": [],
+        "k": 0,
+        "fatal": [],
+        "verdict": "COMPLIANT",
+        "elapsed_ms": 4577
+      },
+      "lock": {
+        "status": "LOCKED",
+        "seconds": 54.8,
+        "tranches": [
+          {
+            "name": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "create_hash": "DCB8F913598E3385C696E6ACB60D8C610E9E2B03CB2227111589A15E2F90A06A",
+            "offer_sequence": 20487188
+          },
+          {
+            "name": "rung_1",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "1D364E00C91C665ED587A6D4476E731A5143BBD238DE23C1D30504558A40C00A",
+            "offer_sequence": 20487189
+          },
+          {
+            "name": "rung_2",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "25F4BF065D46BA9F70A7C0E871377A6DF9A7F9F0661A035C4B6EF888F84B552E",
+            "offer_sequence": 20487190
+          },
+          {
+            "name": "rung_3",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "89575C5503C0E5638165390F7AA06354BD4C709EC48EFD75D7E758CBA7417605",
+            "offer_sequence": 20487191
+          },
+          {
+            "name": "rung_4",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "1FC47D14B089E5B1B3F745337186D70991170D600EA8BA37442C4D0125FBC9C4",
+            "offer_sequence": 20487192
+          },
+          {
+            "name": "rung_5",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "06166DEB591262B72D860B5721ADC8980DC8F51F4C8F20DDD4FA30C8F3C3D9A6",
+            "offer_sequence": 20487193
+          },
+          {
+            "name": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "create_hash": "A1BB5F5D7A135217A74CC846F2D4A5A96EC3EA2648EA4202E805A1BD948B033D",
+            "offer_sequence": 20487194
+          }
+        ]
+      },
+      "negotiation": {
+        "mode": "live",
+        "events": [
+          {
+            "ts_ms": 1788557427041,
+            "round": 0,
+            "actor": "verifier",
+            "action": "skip",
+            "rungs": null,
+            "cited": [],
+            "rationale": "no externally checkable discrepancy",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557427042,
+            "round": 0,
+            "actor": "system",
+            "action": "route",
+            "rungs": 0,
+            "cited": [],
+            "rationale": "k=0 -> clean",
+            "valid": true,
+            "latency_ms": null
+          },
+          {
+            "ts_ms": 1788557427044,
+            "round": 0,
+            "actor": "system",
+            "action": "accept",
+            "rungs": 0,
+            "cited": [],
+            "rationale": "complying presentation; full payout",
+            "valid": true,
+            "latency_ms": null
+          }
+        ],
+        "k": 0,
+        "route": "clean",
+        "discrepancies": [],
+        "evidence": [],
+        "verifier": {
+          "triggered": false,
+          "reason": "no externally checkable discrepancy",
+          "provider": null,
+          "budget": {
+            "calls": 0,
+            "spent_rlusd": "0",
+            "max_calls": 3,
+            "max_spend_rlusd": "0.25",
+            "log": []
+          }
+        },
+        "agreed_rungs": 0,
+        "payout": {
+          "m": 0,
+          "refused": false,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "10000",
+          "platform": "100",
+          "buyer_returned": "0",
+          "rungs_released": 5,
+          "discount_pct": "0"
+        },
+        "status": "CLOSED",
+        "refusal_notice": null,
+        "wall_seconds": 0.01
+      },
+      "agent_latency_ms": [],
+      "wall_seconds_negotiate_settle": 54.5,
+      "settlement": {
+        "m": 0,
+        "payout": {
+          "m": 0,
+          "refused": false,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "10000",
+          "platform": "100",
+          "buyer_returned": "0",
+          "rungs_released": 5,
+          "discount_pct": "0"
+        },
+        "events": [
+          {
+            "index": 0,
+            "name": "base",
+            "kind": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "C16A5720D6D4B00EDA61E2CBC7B9DA0D22C51DB55F662227B188E3BEFDF90271",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 1,
+            "name": "rung_1",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "422CAC73D4A3D58947ECAA2851DC535C23B243D90DFF248D3EFA79B1EA2CB5AB",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 2,
+            "name": "rung_2",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "515AD8D085298D75221446C292F3FBDB27A4659682EFE88FEA4010B5BE1C380A",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 3,
+            "name": "rung_3",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "B5380CF90B41B9AA5E7E0F64A64ED556781752AD759621A64382CBBAA3B83FCF",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 4,
+            "name": "rung_4",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "EB09C8A0DCDE88D4BE49AF6F5964519BBCAC7D55EBE52F227254931C3F05CA66",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 5,
+            "name": "rung_5",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "E338B30158D2B8EB2DAA75630FF33399F219ADEBEA74BBF5F6BB5B2C72B08296",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 6,
+            "name": "fee",
+            "kind": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "114C6660156E98ADEDEB24BB52B2BE6A01C82818BDD7AE5EA4F119D68343351C",
+            "result": "tesSUCCESS"
+          }
+        ],
+        "mode": "ledger",
+        "seconds": 51.4
+      },
+      "swept": [],
+      "final_tranches": [
+        {
+          "name": "base",
+          "amount": "9500",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "C16A5720D6D4B00EDA61E2CBC7B9DA0D22C51DB55F662227B188E3BEFDF90271",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_1",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "422CAC73D4A3D58947ECAA2851DC535C23B243D90DFF248D3EFA79B1EA2CB5AB",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_2",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "515AD8D085298D75221446C292F3FBDB27A4659682EFE88FEA4010B5BE1C380A",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_3",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "B5380CF90B41B9AA5E7E0F64A64ED556781752AD759621A64382CBBAA3B83FCF",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_4",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "EB09C8A0DCDE88D4BE49AF6F5964519BBCAC7D55EBE52F227254931C3F05CA66",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_5",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "E338B30158D2B8EB2DAA75630FF33399F219ADEBEA74BBF5F6BB5B2C72B08296",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "fee",
+          "amount": "100",
+          "destination": "platform",
+          "status": "RELEASED",
+          "action_hash": "114C6660156E98ADEDEB24BB52B2BE6A01C82818BDD7AE5EA4F119D68343351C",
+          "action_result": "tesSUCCESS"
+        }
+      ],
+      "balances_before": {
+        "buyer": "46874",
+        "seller": "3040",
+        "platform": "1019.9",
+        "oracle": "0.1"
+      },
+      "balances_after": {
+        "buyer": "36774",
+        "seller": "13040",
+        "platform": "1119.9",
+        "oracle": "0.1"
+      },
+      "ledger_feed": [
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate base 9500 RLUSD -> seller",
+          "hash": "DCB8F913598E3385C696E6ACB60D8C610E9E2B03CB2227111589A15E2F90A06A",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/DCB8F913598E3385C696E6ACB60D8C610E9E2B03CB2227111589A15E2F90A06A",
+          "kind": "create",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate rung_1 100 RLUSD -> seller",
+          "hash": "1D364E00C91C665ED587A6D4476E731A5143BBD238DE23C1D30504558A40C00A",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/1D364E00C91C665ED587A6D4476E731A5143BBD238DE23C1D30504558A40C00A",
+          "kind": "create",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate rung_2 100 RLUSD -> seller",
+          "hash": "25F4BF065D46BA9F70A7C0E871377A6DF9A7F9F0661A035C4B6EF888F84B552E",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/25F4BF065D46BA9F70A7C0E871377A6DF9A7F9F0661A035C4B6EF888F84B552E",
+          "kind": "create",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate rung_3 100 RLUSD -> seller",
+          "hash": "89575C5503C0E5638165390F7AA06354BD4C709EC48EFD75D7E758CBA7417605",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/89575C5503C0E5638165390F7AA06354BD4C709EC48EFD75D7E758CBA7417605",
+          "kind": "create",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate rung_4 100 RLUSD -> seller",
+          "hash": "1FC47D14B089E5B1B3F745337186D70991170D600EA8BA37442C4D0125FBC9C4",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/1FC47D14B089E5B1B3F745337186D70991170D600EA8BA37442C4D0125FBC9C4",
+          "kind": "create",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate rung_5 100 RLUSD -> seller",
+          "hash": "06166DEB591262B72D860B5721ADC8980DC8F51F4C8F20DDD4FA30C8F3C3D9A6",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/06166DEB591262B72D860B5721ADC8980DC8F51F4C8F20DDD4FA30C8F3C3D9A6",
+          "kind": "create",
+          "tranche": 5
+        },
+        {
+          "ts_ms": 1788557423301,
+          "label": "EscrowCreate fee 100 RLUSD -> platform",
+          "hash": "A1BB5F5D7A135217A74CC846F2D4A5A96EC3EA2648EA4202E805A1BD948B033D",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/A1BB5F5D7A135217A74CC846F2D4A5A96EC3EA2648EA4202E805A1BD948B033D",
+          "kind": "create",
+          "tranche": 6
+        },
+        {
+          "ts_ms": 1788557478409,
+          "label": "EscrowFinish base 9500 RLUSD",
+          "hash": "C16A5720D6D4B00EDA61E2CBC7B9DA0D22C51DB55F662227B188E3BEFDF90271",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/C16A5720D6D4B00EDA61E2CBC7B9DA0D22C51DB55F662227B188E3BEFDF90271",
+          "kind": "finish",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788557478440,
+          "label": "EscrowFinish rung_1 100 RLUSD",
+          "hash": "422CAC73D4A3D58947ECAA2851DC535C23B243D90DFF248D3EFA79B1EA2CB5AB",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/422CAC73D4A3D58947ECAA2851DC535C23B243D90DFF248D3EFA79B1EA2CB5AB",
+          "kind": "finish",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788557478472,
+          "label": "EscrowFinish rung_2 100 RLUSD",
+          "hash": "515AD8D085298D75221446C292F3FBDB27A4659682EFE88FEA4010B5BE1C380A",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/515AD8D085298D75221446C292F3FBDB27A4659682EFE88FEA4010B5BE1C380A",
+          "kind": "finish",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788557478500,
+          "label": "EscrowFinish rung_3 100 RLUSD",
+          "hash": "B5380CF90B41B9AA5E7E0F64A64ED556781752AD759621A64382CBBAA3B83FCF",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/B5380CF90B41B9AA5E7E0F64A64ED556781752AD759621A64382CBBAA3B83FCF",
+          "kind": "finish",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788557478527,
+          "label": "EscrowFinish rung_4 100 RLUSD",
+          "hash": "EB09C8A0DCDE88D4BE49AF6F5964519BBCAC7D55EBE52F227254931C3F05CA66",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/EB09C8A0DCDE88D4BE49AF6F5964519BBCAC7D55EBE52F227254931C3F05CA66",
+          "kind": "finish",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788557478559,
+          "label": "EscrowFinish rung_5 100 RLUSD",
+          "hash": "E338B30158D2B8EB2DAA75630FF33399F219ADEBEA74BBF5F6BB5B2C72B08296",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/E338B30158D2B8EB2DAA75630FF33399F219ADEBEA74BBF5F6BB5B2C72B08296",
+          "kind": "finish",
+          "tranche": 5
+        },
+        {
+          "ts_ms": 1788557478587,
+          "label": "EscrowFinish fee 100 RLUSD",
+          "hash": "114C6660156E98ADEDEB24BB52B2BE6A01C82818BDD7AE5EA4F119D68343351C",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/114C6660156E98ADEDEB24BB52B2BE6A01C82818BDD7AE5EA4F119D68343351C",
+          "kind": "finish",
+          "tranche": 6
+        }
+      ]
+    },
+    {
+      "preset": "discrepant",
+      "deal_id": "disc-57491",
+      "examination": {
+        "lc_number": "MLC-SG-2026-0142",
+        "parser": "groq",
+        "presentation_date": "2026-09-05",
+        "discrepancies": [
+          {
+            "rule_id": "R09",
+            "code": "QTY_INCONSISTENT",
+            "doc": "bill_of_lading,packing_list",
+            "field": "quantity",
+            "found": {
+              "bill_of_lading": 3900.0,
+              "packing_list": 3900.0
+            },
+            "expected": 4000.0,
+            "severity": "negotiable",
+            "checkable": false,
+            "article": "UCP600-14d",
+            "article_text": "Art. 14(d): data in a document need not be identical to, but must not conflict with, other documents or the credit.",
+            "message": "Quantity inconsistent across documents (2.5% deviation from invoice)"
+          },
+          {
+            "rule_id": "R15",
+            "code": "LATE_SHIPMENT",
+            "doc": "bill_of_lading",
+            "field": "shipped_on_board_date",
+            "found": "2026-08-23",
+            "expected": "2026-08-20",
+            "severity": "negotiable",
+            "checkable": true,
+            "article": "UCP600-20a-ii",
+            "article_text": "Art. 20(a)(ii): a bill of lading must indicate shipment on board a named vessel at the port of loading on a date.",
+            "message": "Shipped 3 day(s) after the latest shipment date"
+          }
+        ],
+        "k": 2,
+        "fatal": [],
+        "verdict": "DISCREPANT",
+        "elapsed_ms": 4439
+      },
+      "lock": {
+        "status": "LOCKED",
+        "seconds": 56.1,
+        "tranches": [
+          {
+            "name": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "create_hash": "A8D2914F441D0B6CCE4C5ADC9F1686869194961BDB89865741668C31C5818C2A",
+            "offer_sequence": 20487196
+          },
+          {
+            "name": "rung_1",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "48429AA3493C54111D874A15835F3AE3BE50E3EFD766A7A5401032DAB1D6EFA5",
+            "offer_sequence": 20487197
+          },
+          {
+            "name": "rung_2",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "9661A72DAECE0C37C743BC5DE54B435D232C75D4DF0B90AAB6EE9E01F220672F",
+            "offer_sequence": 20487198
+          },
+          {
+            "name": "rung_3",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "69A2FD4D4ACE7AF58A8AB34EA03D72F168EE82FBCC643F78E67C43E0EA5C3452",
+            "offer_sequence": 20487199
+          },
+          {
+            "name": "rung_4",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "34F2FAADFC9A701342FBB1678DD50A2615F05F9387842E4A8CCAF2C829DA956F",
+            "offer_sequence": 20487200
+          },
+          {
+            "name": "rung_5",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "616D07DCE223AF83B5E3C992185B24027045F30CC20CBB206CE57D6BE6CF1840",
+            "offer_sequence": 20487201
+          },
+          {
+            "name": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "create_hash": "00A43E5048623F0AB5140B77C517F0336041A82FF520C832E2F054BA67D31099",
+            "offer_sequence": 20487202
+          }
+        ]
+      },
+      "negotiation": {
+        "mode": "live",
+        "events": [
+          {
+            "ts_ms": 1788557559727,
+            "round": 0,
+            "actor": "verifier",
+            "action": "discover",
+            "rungs": null,
+            "cited": [
+              "R15"
+            ],
+            "rationale": "2 providers: harbor-ais@0.05 RLUSD/450ms, portlog-premium@0.20 RLUSD/120ms",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557559727,
+            "round": 0,
+            "actor": "verifier",
+            "action": "decide",
+            "rungs": null,
+            "cited": [],
+            "rationale": "chose harbor-ais at 0.05 RLUSD (450ms): cheapest provider covering ['atd']; alternatives ['portlog-premium@0.20']",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557569586,
+            "round": 0,
+            "actor": "verifier",
+            "action": "pay",
+            "rungs": null,
+            "cited": [
+              "67E6EE2D45035006E089FAE771C516991AB0CAA87E0179DAB1699CB503E0FB3D"
+            ],
+            "rationale": "paid 0.05 RLUSD to harbor-ais via x402 (tx 67E6EE2D45035006E089FAE771C516991AB0CAA87E0179DAB1699CB503E0FB3D) in 9822ms",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557569586,
+            "round": 0,
+            "actor": "verifier",
+            "action": "verify",
+            "rungs": null,
+            "cited": [
+              "R15"
+            ],
+            "rationale": "R15 CONFIRMS: oracle ATD 2026-08-23 equals the B/L on-board date; shipment was late by evidence",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557569591,
+            "round": 0,
+            "actor": "system",
+            "action": "route",
+            "rungs": 2,
+            "cited": [
+              "R09",
+              "R15"
+            ],
+            "rationale": "k=2 -> negotiable",
+            "valid": true,
+            "latency_ms": null
+          },
+          {
+            "ts_ms": 1788557570194,
+            "round": 1,
+            "actor": "buyer",
+            "action": "propose",
+            "rungs": 3,
+            "cited": [
+              "R09",
+              "R15"
+            ],
+            "rationale": "Opening anchor one rung above ceiling k=2, citing both R09 and R15 discrepancies.",
+            "valid": false,
+            "latency_ms": 600
+          },
+          {
+            "ts_ms": 1788557570196,
+            "round": 1,
+            "actor": "referee",
+            "action": "bounce",
+            "rungs": 3,
+            "cited": [
+              "R09",
+              "R15"
+            ],
+            "rationale": "buyer offer rejected: rungs 3 outside the evidenced ceiling [0, 2]",
+            "valid": true,
+            "latency_ms": null
+          },
+          {
+            "ts_ms": 1788557571023,
+            "round": 1,
+            "actor": "buyer",
+            "action": "propose",
+            "rungs": 2,
+            "cited": [
+              "R09",
+              "R15"
+            ],
+            "rationale": "Maximum lawful discount of 2\u202f% (2 rungs) aligns with the two identified discrepancies.",
+            "valid": false,
+            "latency_ms": 824
+          },
+          {
+            "ts_ms": 1788557571969,
+            "round": 1,
+            "actor": "seller",
+            "action": "accept",
+            "rungs": 2,
+            "cited": [
+              "R09",
+              "R15"
+            ],
+            "rationale": "Demurrage $600 exceeds 2\u2011rung value $200 RLUSD, so accepting buyer's 2\u2011rung offer is financially optimal.",
+            "valid": false,
+            "latency_ms": 942
+          }
+        ],
+        "k": 2,
+        "route": "negotiable",
+        "discrepancies": [
+          {
+            "rule_id": "R09",
+            "code": "QTY_INCONSISTENT",
+            "doc": "bill_of_lading,packing_list",
+            "field": "quantity",
+            "found": {
+              "bill_of_lading": 3900.0,
+              "packing_list": 3900.0
+            },
+            "expected": 4000.0,
+            "severity": "negotiable",
+            "checkable": false,
+            "article": "UCP600-14d",
+            "article_text": "Art. 14(d): data in a document need not be identical to, but must not conflict with, other documents or the credit.",
+            "message": "Quantity inconsistent across documents (2.5% deviation from invoice)"
+          },
+          {
+            "rule_id": "R15",
+            "code": "LATE_SHIPMENT",
+            "doc": "bill_of_lading",
+            "field": "shipped_on_board_date",
+            "found": "2026-08-23",
+            "expected": "2026-08-20",
+            "severity": "negotiable",
+            "checkable": true,
+            "article": "UCP600-20a-ii",
+            "article_text": "Art. 20(a)(ii): a bill of lading must indicate shipment on board a named vessel at the port of loading on a date.",
+            "message": "Shipped 3 day(s) after the latest shipment date"
+          }
+        ],
+        "evidence": [
+          {
+            "rule_id": "R15",
+            "verdict": "CONFIRMS",
+            "summary": "oracle ATD 2026-08-23 equals the B/L on-board date; shipment was late by evidence",
+            "provider": "harbor-ais",
+            "tx_hash": "67E6EE2D45035006E089FAE771C516991AB0CAA87E0179DAB1699CB503E0FB3D",
+            "price_rlusd": "0.05",
+            "telemetry": {
+              "vessel": "MV Sagar Kranti",
+              "voyage": "SK-0917E",
+              "container_number": "TCLU7702410",
+              "atd": "2026-08-23",
+              "port_of_loading": "Tuticorin, India",
+              "port_of_discharge": "Singapore"
+            },
+            "signature": "7472CA45444A7F166A3F491ABC17F9B7996A10405EE0E2707E02E641B227A51527B2997D54F5D64A288976A80C56A6C68F875F86D2B2A2B64E3D392A9B422B07"
+          }
+        ],
+        "verifier": {
+          "triggered": true,
+          "reason": "disputed value 100.000 RLUSD >= 20x cheapest query (1.00)",
+          "provider": "harbor-ais",
+          "budget": {
+            "calls": 1,
+            "spent_rlusd": "0.05",
+            "max_calls": 3,
+            "max_spend_rlusd": "0.25",
+            "log": [
+              {
+                "provider": "harbor-ais",
+                "price": "0.05",
+                "tx_hash": "67E6EE2D45035006E089FAE771C516991AB0CAA87E0179DAB1699CB503E0FB3D"
+              }
+            ]
+          }
+        },
+        "agreed_rungs": 2,
+        "payout": {
+          "m": 2,
+          "refused": false,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "9800",
+          "platform": "100",
+          "buyer_returned": "200",
+          "rungs_released": 3,
+          "discount_pct": "2"
+        },
+        "status": "CLOSED",
+        "refusal_notice": null,
+        "wall_seconds": 12.69
+      },
+      "agent_latency_ms": [
+        600,
+        824,
+        942
+      ],
+      "wall_seconds_negotiate_settle": 64.8,
+      "settlement": {
+        "m": 2,
+        "payout": {
+          "m": 2,
+          "refused": false,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "9800",
+          "platform": "100",
+          "buyer_returned": "200",
+          "rungs_released": 3,
+          "discount_pct": "2"
+        },
+        "events": [
+          {
+            "index": 0,
+            "name": "base",
+            "kind": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "941FB88058C9B0AD5BE233CBFC5B5CFDA3FB385F857F03725CA0D9BDF8C9409C",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 1,
+            "name": "rung_1",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "3BF3E77FF9AA3A9A7C7B52759E587BA82D0CC4E2D5978C0BB114C833AF357DC7",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 2,
+            "name": "rung_2",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "7D9A73B05397A9EC610519CFDD631B2702364C3AF10CDB8D3333B606086EB86C",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 3,
+            "name": "rung_3",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "8D9A7F09A30DD389EF7EC2AE387BE0DF06C434C64F751A5EF917C890E789D236",
+            "result": "tesSUCCESS"
+          },
+          {
+            "index": 4,
+            "name": "rung_4",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 5,
+            "name": "rung_5",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 6,
+            "name": "fee",
+            "kind": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "action": "finish",
+            "status": "RELEASED",
+            "hash": "DC1870946BCA3F0DD6B92B71D5825300A34B53FEEB6546D49C24180FAB913441",
+            "result": "tesSUCCESS"
+          }
+        ],
+        "mode": "ledger",
+        "seconds": 49.1
+      },
+      "swept": [
+        {
+          "index": 4,
+          "name": "rung_4",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "6D1A6ABFCF904E2C58692376F7EF6FD56DB6EFC55EBD25D5941AAF4B0BF9477F",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 5,
+          "name": "rung_5",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "828E5E2FA9805009AEBD3A571241B2D0D548DCC32AA7964C9192CA03A7A28AE3",
+          "result": "tesSUCCESS"
+        }
+      ],
+      "final_tranches": [
+        {
+          "name": "base",
+          "amount": "9500",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "941FB88058C9B0AD5BE233CBFC5B5CFDA3FB385F857F03725CA0D9BDF8C9409C",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_1",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "3BF3E77FF9AA3A9A7C7B52759E587BA82D0CC4E2D5978C0BB114C833AF357DC7",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_2",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "7D9A73B05397A9EC610519CFDD631B2702364C3AF10CDB8D3333B606086EB86C",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_3",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RELEASED",
+          "action_hash": "8D9A7F09A30DD389EF7EC2AE387BE0DF06C434C64F751A5EF917C890E789D236",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_4",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "6D1A6ABFCF904E2C58692376F7EF6FD56DB6EFC55EBD25D5941AAF4B0BF9477F",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_5",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "828E5E2FA9805009AEBD3A571241B2D0D548DCC32AA7964C9192CA03A7A28AE3",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "fee",
+          "amount": "100",
+          "destination": "platform",
+          "status": "RELEASED",
+          "action_hash": "DC1870946BCA3F0DD6B92B71D5825300A34B53FEEB6546D49C24180FAB913441",
+          "action_result": "tesSUCCESS"
+        }
+      ],
+      "balances_before": {
+        "buyer": "36774",
+        "seller": "13040",
+        "platform": "1119.9",
+        "oracle": "0.1"
+      },
+      "balances_after": {
+        "buyer": "26874",
+        "seller": "22840",
+        "platform": "1219.85",
+        "oracle": "0.15"
+      },
+      "ledger_feed": [
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate base 9500 RLUSD -> seller",
+          "hash": "A8D2914F441D0B6CCE4C5ADC9F1686869194961BDB89865741668C31C5818C2A",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/A8D2914F441D0B6CCE4C5ADC9F1686869194961BDB89865741668C31C5818C2A",
+          "kind": "create",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate rung_1 100 RLUSD -> seller",
+          "hash": "48429AA3493C54111D874A15835F3AE3BE50E3EFD766A7A5401032DAB1D6EFA5",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/48429AA3493C54111D874A15835F3AE3BE50E3EFD766A7A5401032DAB1D6EFA5",
+          "kind": "create",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate rung_2 100 RLUSD -> seller",
+          "hash": "9661A72DAECE0C37C743BC5DE54B435D232C75D4DF0B90AAB6EE9E01F220672F",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/9661A72DAECE0C37C743BC5DE54B435D232C75D4DF0B90AAB6EE9E01F220672F",
+          "kind": "create",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate rung_3 100 RLUSD -> seller",
+          "hash": "69A2FD4D4ACE7AF58A8AB34EA03D72F168EE82FBCC643F78E67C43E0EA5C3452",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/69A2FD4D4ACE7AF58A8AB34EA03D72F168EE82FBCC643F78E67C43E0EA5C3452",
+          "kind": "create",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate rung_4 100 RLUSD -> seller",
+          "hash": "34F2FAADFC9A701342FBB1678DD50A2615F05F9387842E4A8CCAF2C829DA956F",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/34F2FAADFC9A701342FBB1678DD50A2615F05F9387842E4A8CCAF2C829DA956F",
+          "kind": "create",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate rung_5 100 RLUSD -> seller",
+          "hash": "616D07DCE223AF83B5E3C992185B24027045F30CC20CBB206CE57D6BE6CF1840",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/616D07DCE223AF83B5E3C992185B24027045F30CC20CBB206CE57D6BE6CF1840",
+          "kind": "create",
+          "tranche": 5
+        },
+        {
+          "ts_ms": 1788557553109,
+          "label": "EscrowCreate fee 100 RLUSD -> platform",
+          "hash": "00A43E5048623F0AB5140B77C517F0336041A82FF520C832E2F054BA67D31099",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/00A43E5048623F0AB5140B77C517F0336041A82FF520C832E2F054BA67D31099",
+          "kind": "create",
+          "tranche": 6
+        },
+        {
+          "ts_ms": 1788557621160,
+          "label": "EscrowFinish base 9500 RLUSD",
+          "hash": "941FB88058C9B0AD5BE233CBFC5B5CFDA3FB385F857F03725CA0D9BDF8C9409C",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/941FB88058C9B0AD5BE233CBFC5B5CFDA3FB385F857F03725CA0D9BDF8C9409C",
+          "kind": "finish",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788557621172,
+          "label": "EscrowFinish rung_1 100 RLUSD",
+          "hash": "3BF3E77FF9AA3A9A7C7B52759E587BA82D0CC4E2D5978C0BB114C833AF357DC7",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/3BF3E77FF9AA3A9A7C7B52759E587BA82D0CC4E2D5978C0BB114C833AF357DC7",
+          "kind": "finish",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788557621184,
+          "label": "EscrowFinish rung_2 100 RLUSD",
+          "hash": "7D9A73B05397A9EC610519CFDD631B2702364C3AF10CDB8D3333B606086EB86C",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/7D9A73B05397A9EC610519CFDD631B2702364C3AF10CDB8D3333B606086EB86C",
+          "kind": "finish",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788557621196,
+          "label": "EscrowFinish rung_3 100 RLUSD",
+          "hash": "8D9A7F09A30DD389EF7EC2AE387BE0DF06C434C64F751A5EF917C890E789D236",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/8D9A7F09A30DD389EF7EC2AE387BE0DF06C434C64F751A5EF917C890E789D236",
+          "kind": "finish",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788557621231,
+          "label": "EscrowFinish fee 100 RLUSD",
+          "hash": "DC1870946BCA3F0DD6B92B71D5825300A34B53FEEB6546D49C24180FAB913441",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/DC1870946BCA3F0DD6B92B71D5825300A34B53FEEB6546D49C24180FAB913441",
+          "kind": "finish",
+          "tranche": 6
+        },
+        {
+          "ts_ms": 1788557716769,
+          "label": "EscrowCancel rung_4 100 RLUSD (expired, returned)",
+          "hash": "6D1A6ABFCF904E2C58692376F7EF6FD56DB6EFC55EBD25D5941AAF4B0BF9477F",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/6D1A6ABFCF904E2C58692376F7EF6FD56DB6EFC55EBD25D5941AAF4B0BF9477F",
+          "kind": "sweep",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788557716769,
+          "label": "EscrowCancel rung_5 100 RLUSD (expired, returned)",
+          "hash": "828E5E2FA9805009AEBD3A571241B2D0D548DCC32AA7964C9192CA03A7A28AE3",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/828E5E2FA9805009AEBD3A571241B2D0D548DCC32AA7964C9192CA03A7A28AE3",
+          "kind": "sweep",
+          "tranche": 5
+        }
+      ]
+    },
+    {
+      "preset": "fraudulent",
+      "deal_id": "frau-57737",
+      "examination": {
+        "lc_number": "MLC-SG-2026-0142",
+        "parser": "groq",
+        "presentation_date": "2026-09-05",
+        "discrepancies": [
+          {
+            "rule_id": "R19",
+            "code": "CONTAINER_MISMATCH",
+            "doc": "packing_list",
+            "field": "container_number",
+            "found": "MSKU8811207",
+            "expected": "TCLU7702410",
+            "severity": "negotiable",
+            "checkable": true,
+            "article": "UCP600-14d",
+            "article_text": "Art. 14(d): data in a document need not be identical to, but must not conflict with, other documents or the credit.",
+            "message": "Container on packing list differs from the bill of lading"
+          }
+        ],
+        "k": 1,
+        "fatal": [],
+        "verdict": "DISCREPANT",
+        "elapsed_ms": 6065
+      },
+      "lock": {
+        "status": "LOCKED",
+        "seconds": 79.8,
+        "tranches": [
+          {
+            "name": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "create_hash": "1F36A7E2E98DBFDBCAB485499DA804E2FB20359F591064C6AD19CBD79D489746",
+            "offer_sequence": 20487204
+          },
+          {
+            "name": "rung_1",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "C3D01CFFA4434BAC4DC0948867D73D4A4C16B961C790DA30F5CD2B8F46CFEC8B",
+            "offer_sequence": 20487205
+          },
+          {
+            "name": "rung_2",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "81B483F5028F59A2DA39D8908B4EB5E3B2067EC9F7D63A378256A3857F64A824",
+            "offer_sequence": 20487206
+          },
+          {
+            "name": "rung_3",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "3B468BDB8EC5DB9250761D3C9418D06990F7319D1555820F29D28BF1AD1383B2",
+            "offer_sequence": 20487207
+          },
+          {
+            "name": "rung_4",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "311E19BC182C39C172135898E069E4C7B06F429893B2B8CC6F43DCDC665D9422",
+            "offer_sequence": 20487208
+          },
+          {
+            "name": "rung_5",
+            "amount": "100",
+            "destination": "seller",
+            "create_hash": "41641AD9E06F845DCE54E5EDDE5E74F18DF80D39D0FEF174A0CF44495D81CBB7",
+            "offer_sequence": 20487209
+          },
+          {
+            "name": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "create_hash": "DBDA1AE997B99B5BBCD52E3A17A4E05F55E73A6B34E16F5431B2C3DE5B4F2DC4",
+            "offer_sequence": 20487210
+          }
+        ]
+      },
+      "negotiation": {
+        "mode": "live",
+        "events": [
+          {
+            "ts_ms": 1788557837805,
+            "round": 0,
+            "actor": "verifier",
+            "action": "discover",
+            "rungs": null,
+            "cited": [
+              "R19"
+            ],
+            "rationale": "2 providers: harbor-ais@0.05 RLUSD/450ms, portlog-premium@0.20 RLUSD/120ms",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557837805,
+            "round": 0,
+            "actor": "verifier",
+            "action": "decide",
+            "rungs": null,
+            "cited": [],
+            "rationale": "chose harbor-ais at 0.05 RLUSD (450ms): cheapest provider covering ['container_number', 'vessel']; alternatives ['portlog-premium@0.20']",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557853141,
+            "round": 0,
+            "actor": "verifier",
+            "action": "pay",
+            "rungs": null,
+            "cited": [
+              "8029ADA178B61AF2D20BE72B19216725D6AEDCB0038DBD4AB45345D10272950B"
+            ],
+            "rationale": "paid 0.05 RLUSD to harbor-ais via x402 (tx 8029ADA178B61AF2D20BE72B19216725D6AEDCB0038DBD4AB45345D10272950B) in 15336ms",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557853141,
+            "round": 0,
+            "actor": "verifier",
+            "action": "verify",
+            "rungs": null,
+            "cited": [
+              "R19"
+            ],
+            "rationale": "R19 MISMATCH: carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557853141,
+            "round": 0,
+            "actor": "verifier",
+            "action": "adjust",
+            "rungs": 2,
+            "cited": [
+              "R19",
+              "R20"
+            ],
+            "rationale": "k 1 -> 2; FRAUD_SUSPECTED raised",
+            "valid": true
+          },
+          {
+            "ts_ms": 1788557853149,
+            "round": 0,
+            "actor": "system",
+            "action": "route",
+            "rungs": 2,
+            "cited": [
+              "R19",
+              "R20"
+            ],
+            "rationale": "k=2 -> refuse",
+            "valid": true,
+            "latency_ms": null
+          },
+          {
+            "ts_ms": 1788557854255,
+            "round": 0,
+            "actor": "system",
+            "action": "refuse",
+            "rungs": null,
+            "cited": [
+              "R19",
+              "R20"
+            ],
+            "rationale": "NOTICE OF REFUSAL \u2014 credit MLC-SG-2026-0142\nWe have examined the presentation and refuse to honour it (UCP 600 Art. 16(c)). Discrepancies:\n- R19 CONTAINER_MISMATCH (UCP600-14d): Container on packing list differs from the bill of lading.\n- R20 FRAUD_SUSPECTED (UCP600-34): External evidence contradicts the transport document; carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states T",
+            "valid": true,
+            "latency_ms": null
+          }
+        ],
+        "k": 2,
+        "route": "refuse",
+        "discrepancies": [
+          {
+            "rule_id": "R19",
+            "code": "CONTAINER_MISMATCH",
+            "doc": "packing_list",
+            "field": "container_number",
+            "found": "MSKU8811207",
+            "expected": "TCLU7702410",
+            "severity": "negotiable",
+            "checkable": true,
+            "article": "UCP600-14d",
+            "article_text": "Art. 14(d): data in a document need not be identical to, but must not conflict with, other documents or the credit.",
+            "message": "Container on packing list differs from the bill of lading"
+          },
+          {
+            "rule_id": "R20",
+            "code": "FRAUD_SUSPECTED",
+            "severity": "fatal",
+            "article": "UCP600-34",
+            "checkable": false,
+            "doc": "packing_list",
+            "field": "container_number",
+            "found": "MSKU8811207",
+            "expected": "TCLU7702410",
+            "message": "External evidence contradicts the transport document: carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti",
+            "article_text": "Fraud exception: a bank need not honour where the transport document misrepresents the shipment."
+          }
+        ],
+        "evidence": [
+          {
+            "rule_id": "R19",
+            "verdict": "MISMATCH",
+            "summary": "carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti",
+            "provider": "harbor-ais",
+            "tx_hash": "8029ADA178B61AF2D20BE72B19216725D6AEDCB0038DBD4AB45345D10272950B",
+            "price_rlusd": "0.05",
+            "telemetry": {
+              "vessel": "MV Ocean Pioneer",
+              "voyage": "OP-2231W",
+              "container_number": "TCLU7702410",
+              "atd": "2026-08-18",
+              "port_of_loading": "Tuticorin, India",
+              "port_of_discharge": "Singapore"
+            },
+            "signature": "6E3E2A2B4ECC59BCF2370382BC8BF150A973FF19612455F791BD6C3CB8C5CE5E728E71E3A1365029E451882AB7FAE76A93EFAAE08AFE7EE7945A3E9884159C01"
+          }
+        ],
+        "verifier": {
+          "triggered": true,
+          "reason": "disputed value 100.000 RLUSD >= 20x cheapest query (1.00)",
+          "provider": "harbor-ais",
+          "budget": {
+            "calls": 1,
+            "spent_rlusd": "0.05",
+            "max_calls": 3,
+            "max_spend_rlusd": "0.25",
+            "log": [
+              {
+                "provider": "harbor-ais",
+                "price": "0.05",
+                "tx_hash": "8029ADA178B61AF2D20BE72B19216725D6AEDCB0038DBD4AB45345D10272950B"
+              }
+            ]
+          }
+        },
+        "agreed_rungs": null,
+        "payout": {
+          "m": 6,
+          "refused": true,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "0",
+          "platform": "0",
+          "buyer_returned": "10100",
+          "rungs_released": 0,
+          "discount_pct": "0"
+        },
+        "status": "REFUSED",
+        "refusal_notice": "NOTICE OF REFUSAL \u2014 credit MLC-SG-2026-0142\nWe have examined the presentation and refuse to honour it (UCP 600 Art. 16(c)). Discrepancies:\n- R19 CONTAINER_MISMATCH (UCP600-14d): Container on packing list differs from the bill of lading.\n- R20 FRAUD_SUSPECTED (UCP600-34): External evidence contradicts the transport document; carrier record shows TCLU7702410 on MV Ocean Pioneer, but the B/L states TCLU7702410 on MV Sagar Kranti.\nDocuments are held at your disposal; all escrowed funds will be returned to the applicant at expiry.",
+        "wall_seconds": 17.68
+      },
+      "agent_latency_ms": [],
+      "wall_seconds_negotiate_settle": 28.4,
+      "settlement": {
+        "m": 6,
+        "payout": {
+          "m": 6,
+          "refused": true,
+          "lc_amount": "10000",
+          "locked": "10100",
+          "seller": "0",
+          "platform": "0",
+          "buyer_returned": "10100",
+          "rungs_released": 0,
+          "discount_pct": "0"
+        },
+        "events": [
+          {
+            "index": 0,
+            "name": "base",
+            "kind": "base",
+            "amount": "9500",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 1,
+            "name": "rung_1",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 2,
+            "name": "rung_2",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 3,
+            "name": "rung_3",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 4,
+            "name": "rung_4",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 5,
+            "name": "rung_5",
+            "kind": "rung",
+            "amount": "100",
+            "destination": "seller",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          },
+          {
+            "index": 6,
+            "name": "fee",
+            "kind": "fee",
+            "amount": "100",
+            "destination": "platform",
+            "action": "expire",
+            "status": "RETURN_PENDING",
+            "hash": null,
+            "result": "awaiting CancelAfter"
+          }
+        ],
+        "mode": "ledger",
+        "seconds": 2.2
+      },
+      "swept": [
+        {
+          "index": 0,
+          "name": "base",
+          "kind": "base",
+          "amount": "9500",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "365CD069AE3C04AEE6A942F0D25A9868B554F0627C3CA1E4E6F6D0874DA2341B",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 1,
+          "name": "rung_1",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "CF12D45DC69F48759E188121BDAC9ECD9CCFB1FB3C8374D9F4D8546BE469F874",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 2,
+          "name": "rung_2",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "7EB52EF73506624C6D72187C41B33D501C84AB2F8E61FF56B0A968F91AC2650C",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 3,
+          "name": "rung_3",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "AE32D4227C4D1991F25429815EB5D655BC8E3757FE5A607B8BCE75881754DD92",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 4,
+          "name": "rung_4",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "0B57F5AF4E2B875BA700FF66F190D9723DEC92C0A36194055777D88B511010AA",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 5,
+          "name": "rung_5",
+          "kind": "rung",
+          "amount": "100",
+          "destination": "seller",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "B6674A7F64A71A0229CC9D5BE4BFDFF9CEF34D5210E811E7BA4ED8B325E3F565",
+          "result": "tesSUCCESS"
+        },
+        {
+          "index": 6,
+          "name": "fee",
+          "kind": "fee",
+          "amount": "100",
+          "destination": "platform",
+          "action": "expire",
+          "status": "RETURNED",
+          "hash": "1852442F31977982DA321647DD56FDBAAA2D9BFADD9741A4EE41BD06973E72F4",
+          "result": "tesSUCCESS"
+        }
+      ],
+      "final_tranches": [
+        {
+          "name": "base",
+          "amount": "9500",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "365CD069AE3C04AEE6A942F0D25A9868B554F0627C3CA1E4E6F6D0874DA2341B",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_1",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "CF12D45DC69F48759E188121BDAC9ECD9CCFB1FB3C8374D9F4D8546BE469F874",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_2",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "7EB52EF73506624C6D72187C41B33D501C84AB2F8E61FF56B0A968F91AC2650C",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_3",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "AE32D4227C4D1991F25429815EB5D655BC8E3757FE5A607B8BCE75881754DD92",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_4",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "0B57F5AF4E2B875BA700FF66F190D9723DEC92C0A36194055777D88B511010AA",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "rung_5",
+          "amount": "100",
+          "destination": "seller",
+          "status": "RETURNED",
+          "action_hash": "B6674A7F64A71A0229CC9D5BE4BFDFF9CEF34D5210E811E7BA4ED8B325E3F565",
+          "action_result": "tesSUCCESS"
+        },
+        {
+          "name": "fee",
+          "amount": "100",
+          "destination": "platform",
+          "status": "RETURNED",
+          "action_hash": "1852442F31977982DA321647DD56FDBAAA2D9BFADD9741A4EE41BD06973E72F4",
+          "action_result": "tesSUCCESS"
+        }
+      ],
+      "balances_before": {
+        "buyer": "26874",
+        "seller": "22840",
+        "platform": "1219.85",
+        "oracle": "0.15"
+      },
+      "balances_after": {
+        "buyer": "26874",
+        "seller": "22840",
+        "platform": "1219.8",
+        "oracle": "0.2"
+      },
+      "ledger_feed": [
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate base 9500 RLUSD -> seller",
+          "hash": "1F36A7E2E98DBFDBCAB485499DA804E2FB20359F591064C6AD19CBD79D489746",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/1F36A7E2E98DBFDBCAB485499DA804E2FB20359F591064C6AD19CBD79D489746",
+          "kind": "create",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate rung_1 100 RLUSD -> seller",
+          "hash": "C3D01CFFA4434BAC4DC0948867D73D4A4C16B961C790DA30F5CD2B8F46CFEC8B",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/C3D01CFFA4434BAC4DC0948867D73D4A4C16B961C790DA30F5CD2B8F46CFEC8B",
+          "kind": "create",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate rung_2 100 RLUSD -> seller",
+          "hash": "81B483F5028F59A2DA39D8908B4EB5E3B2067EC9F7D63A378256A3857F64A824",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/81B483F5028F59A2DA39D8908B4EB5E3B2067EC9F7D63A378256A3857F64A824",
+          "kind": "create",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate rung_3 100 RLUSD -> seller",
+          "hash": "3B468BDB8EC5DB9250761D3C9418D06990F7319D1555820F29D28BF1AD1383B2",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/3B468BDB8EC5DB9250761D3C9418D06990F7319D1555820F29D28BF1AD1383B2",
+          "kind": "create",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate rung_4 100 RLUSD -> seller",
+          "hash": "311E19BC182C39C172135898E069E4C7B06F429893B2B8CC6F43DCDC665D9422",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/311E19BC182C39C172135898E069E4C7B06F429893B2B8CC6F43DCDC665D9422",
+          "kind": "create",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate rung_5 100 RLUSD -> seller",
+          "hash": "41641AD9E06F845DCE54E5EDDE5E74F18DF80D39D0FEF174A0CF44495D81CBB7",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/41641AD9E06F845DCE54E5EDDE5E74F18DF80D39D0FEF174A0CF44495D81CBB7",
+          "kind": "create",
+          "tranche": 5
+        },
+        {
+          "ts_ms": 1788557826234,
+          "label": "EscrowCreate fee 100 RLUSD -> platform",
+          "hash": "DBDA1AE997B99B5BBCD52E3A17A4E05F55E73A6B34E16F5431B2C3DE5B4F2DC4",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/DBDA1AE997B99B5BBCD52E3A17A4E05F55E73A6B34E16F5431B2C3DE5B4F2DC4",
+          "kind": "create",
+          "tranche": 6
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel base 9500 RLUSD (expired, returned)",
+          "hash": "365CD069AE3C04AEE6A942F0D25A9868B554F0627C3CA1E4E6F6D0874DA2341B",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/365CD069AE3C04AEE6A942F0D25A9868B554F0627C3CA1E4E6F6D0874DA2341B",
+          "kind": "sweep",
+          "tranche": 0
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel rung_1 100 RLUSD (expired, returned)",
+          "hash": "CF12D45DC69F48759E188121BDAC9ECD9CCFB1FB3C8374D9F4D8546BE469F874",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/CF12D45DC69F48759E188121BDAC9ECD9CCFB1FB3C8374D9F4D8546BE469F874",
+          "kind": "sweep",
+          "tranche": 1
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel rung_2 100 RLUSD (expired, returned)",
+          "hash": "7EB52EF73506624C6D72187C41B33D501C84AB2F8E61FF56B0A968F91AC2650C",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/7EB52EF73506624C6D72187C41B33D501C84AB2F8E61FF56B0A968F91AC2650C",
+          "kind": "sweep",
+          "tranche": 2
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel rung_3 100 RLUSD (expired, returned)",
+          "hash": "AE32D4227C4D1991F25429815EB5D655BC8E3757FE5A607B8BCE75881754DD92",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/AE32D4227C4D1991F25429815EB5D655BC8E3757FE5A607B8BCE75881754DD92",
+          "kind": "sweep",
+          "tranche": 3
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel rung_4 100 RLUSD (expired, returned)",
+          "hash": "0B57F5AF4E2B875BA700FF66F190D9723DEC92C0A36194055777D88B511010AA",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/0B57F5AF4E2B875BA700FF66F190D9723DEC92C0A36194055777D88B511010AA",
+          "kind": "sweep",
+          "tranche": 4
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel rung_5 100 RLUSD (expired, returned)",
+          "hash": "B6674A7F64A71A0229CC9D5BE4BFDFF9CEF34D5210E811E7BA4ED8B325E3F565",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/B6674A7F64A71A0229CC9D5BE4BFDFF9CEF34D5210E811E7BA4ED8B325E3F565",
+          "kind": "sweep",
+          "tranche": 5
+        },
+        {
+          "ts_ms": 1788558047085,
+          "label": "EscrowCancel fee 100 RLUSD (expired, returned)",
+          "hash": "1852442F31977982DA321647DD56FDBAAA2D9BFADD9741A4EE41BD06973E72F4",
+          "result": "tesSUCCESS",
+          "explorer": "https://testnet.xrpl.org/transactions/1852442F31977982DA321647DD56FDBAAA2D9BFADD9741A4EE41BD06973E72F4",
+          "kind": "sweep",
+          "tranche": 6
+        }
+      ]
+    }
+  ]
+}

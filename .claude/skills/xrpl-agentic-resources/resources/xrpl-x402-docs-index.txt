@@ -1,0 +1,9 @@
+https://xrpl-x402.t54.ai/docs/client-guides/python
+https://xrpl-x402.t54.ai/docs/client-guides/typescript
+https://xrpl-x402.t54.ai/docs/merchant-guides/express
+https://xrpl-x402.t54.ai/docs/merchant-guides/fastapi
+https://xrpl-x402.t54.ai/docs/overview
+https://xrpl-x402.t54.ai/docs/quickstart
+https://xrpl-x402.t54.ai/docs/verifiable-intent
+https://xrpl-x402.t54.ai/docs/verifiable-intent/agent-guide
+https://xrpl-x402.t54.ai/docs/xrpl-scheme

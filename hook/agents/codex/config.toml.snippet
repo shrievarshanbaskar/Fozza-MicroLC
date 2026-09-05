@@ -1,0 +1,8 @@
+# Alternative to hooks.json: put this in the project's .codex/config.toml (not the global ~/.codex/config.toml)
+[[hooks.Stop]]
+matcher = ""
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = "node /ABSOLUTE/PATH/TO/hook/agents/codex/stop-hook.mjs"
+timeout = 60

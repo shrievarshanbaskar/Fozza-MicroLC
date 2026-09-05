@@ -1,0 +1,64 @@
+{
+  "n": 3,
+  "sequential_seconds": 49.3,
+  "sequential": [
+    {
+      "ok": true,
+      "hash": "A9E5018FE33BBFD346940AEF97A5E6D1BD4BCB2A652AA37FF1C640B9CEF7F2B0",
+      "result": "tesSUCCESS",
+      "sequence": 20487155,
+      "ticket_sequence": null,
+      "ledger_index": 20487283,
+      "explorer": "https://testnet.xrpl.org/transactions/A9E5018FE33BBFD346940AEF97A5E6D1BD4BCB2A652AA37FF1C640B9CEF7F2B0"
+    },
+    {
+      "ok": true,
+      "hash": "BD2A0D043E0FB20BDCFA27BE266683356B73E719C79BF878AF194609EA7A9AD6",
+      "result": "tesSUCCESS",
+      "sequence": 20487156,
+      "ticket_sequence": null,
+      "ledger_index": 20487288,
+      "explorer": "https://testnet.xrpl.org/transactions/BD2A0D043E0FB20BDCFA27BE266683356B73E719C79BF878AF194609EA7A9AD6"
+    },
+    {
+      "ok": true,
+      "hash": "1A93BA7B5813B2205020DF0F847293FA7DD82CFBBFE4F15858E3A202A1A2DCF1",
+      "result": "tesSUCCESS",
+      "sequence": 20487157,
+      "ticket_sequence": null,
+      "ledger_index": 20487294,
+      "explorer": "https://testnet.xrpl.org/transactions/1A93BA7B5813B2205020DF0F847293FA7DD82CFBBFE4F15858E3A202A1A2DCF1"
+    }
+  ],
+  "tickets_seconds_incl_ticketcreate": 34.8,
+  "tickets": [
+    {
+      "ok": true,
+      "hash": "22F85CCDDEF048FC57338351BD6FD199E796A224647468A08BBB534206D6D010",
+      "result": "tesSUCCESS",
+      "sequence": 0,
+      "ticket_sequence": 20487159,
+      "ledger_index": 20487304,
+      "explorer": "https://testnet.xrpl.org/transactions/22F85CCDDEF048FC57338351BD6FD199E796A224647468A08BBB534206D6D010"
+    },
+    {
+      "ok": true,
+      "hash": "7D64572B944612BB1C9904E1195582884EA7FC43A5935F97B389431CB6C56F48",
+      "result": "tesSUCCESS",
+      "sequence": 0,
+      "ticket_sequence": 20487160,
+      "ledger_index": 20487304,
+      "explorer": "https://testnet.xrpl.org/transactions/7D64572B944612BB1C9904E1195582884EA7FC43A5935F97B389431CB6C56F48"
+    },
+    {
+      "ok": true,
+      "hash": "D25730AF7D35C6354AB98BEF60B6A1DF4FA4EB33205D61B4325EA7B2E4657944",
+      "result": "tesSUCCESS",
+      "sequence": 0,
+      "ticket_sequence": 20487161,
+      "ledger_index": 20487304,
+      "explorer": "https://testnet.xrpl.org/transactions/D25730AF7D35C6354AB98BEF60B6A1DF4FA4EB33205D61B4325EA7B2E4657944"
+    }
+  ],
+  "all_ok": true
+}
