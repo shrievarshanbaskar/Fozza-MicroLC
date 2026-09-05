@@ -258,5 +258,5 @@ frontend/               Next.js 14 console + Playwright e2e
 scripts/                bootstrap_wallets, live runners, tickets spike, hash table
 tests/                  offline (default) and live (-m live) suites
 proof/                  archived runs, hashes, balances
-docs/                   TRANSACTIONS.md, VIDEO_SCRIPT.md
+docs/                   TRANSACTIONS.md
 ```

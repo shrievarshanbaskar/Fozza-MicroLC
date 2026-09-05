@@ -49,3 +49,6 @@ Thumbs.db
 .claude/skills/xrpl-agentic-resources/xrpl-dev-portal/
 .claude/skills/xrpl-agentic-resources/XRPL-Standards/
 .claude/settings.local.json
+
+# personal recording notes, not part of the submission
+docs/VIDEO_SCRIPT.md
