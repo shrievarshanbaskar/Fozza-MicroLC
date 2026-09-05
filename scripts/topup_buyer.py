@@ -6,7 +6,8 @@
 Each lock parks 101% of the credit in seven escrows, and anything the seller keeps or a failed lock
 leaves stranded reduces what the buyer can spend next time. This mints the shortfall from our own
 testnet issuer (state/wallets.json) after raising the buyer's trust-line limit if it is too low.
-Testnet only: the issuer here is a faucet wallet, not Ripple's RLUSD issuer.
+Testnet only: the issuer here is a faucet wallet, not Ripple's RLUSD issuer. The API's lock
+pre-flight reuses top_up() when DEMO_AUTO_TOPUP=true.
 """
 from __future__ import annotations
 
@@ -15,12 +16,42 @@ import sys
 from decimal import Decimal
 from pathlib import Path
 
-from xrpl.models.requests import AccountLines
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from xrpl_escrow import LedgerClient, load_wallets  # noqa: E402
 
 DEFAULT_TARGET = Decimal("100000")
+
+
+def top_up(ledger, issuer_wallet, buyer_wallet, target=DEFAULT_TARGET, log=print) -> dict:
+    """Mint RLUSD issuer -> buyer until the buyer's spendable balance reaches `target`.
+
+    Returns {"minted": Decimal, "balance": Decimal, "tx_hash": str | None, "trustset_hash": str | None}.
+    Raises RuntimeError if a TrustSet or the Payment is rejected. Never mints when already at target.
+    """
+    target = Decimal(str(target))
+    issuer_addr, buyer_addr = issuer_wallet.classic_address, buyer_wallet.classic_address
+    balance = Decimal(str(ledger.iou_balance(buyer_addr, issuer_addr)))
+    out = {"minted": Decimal(0), "balance": balance, "tx_hash": None, "trustset_hash": None}
+    if balance >= target:
+        return out
+    shortfall = target - balance
+
+    limit_query = getattr(ledger, "trust_limit", None)
+    limit = Decimal(str(limit_query(buyer_addr, issuer_addr))) if limit_query else None
+    if limit is not None and limit < target:
+        new_limit = max(target * 10, Decimal("1000000000"))
+        r = ledger.create_trustline(buyer_wallet, issuer_addr, limit=str(new_limit))
+        log(f"  TrustSet limit -> {new_limit}: {r.result} {r.hash}")
+        if not r.ok:
+            raise RuntimeError(f"TrustSet rejected: {r.result}")
+        out["trustset_hash"] = r.hash
+
+    r = ledger.issue(issuer_wallet, buyer_addr, str(shortfall))
+    log(f"  Payment issuer -> buyer {shortfall} RLUSD: {r.result} {r.hash}")
+    if not r.ok:
+        raise RuntimeError(f"mint rejected: {r.result}")
+    out.update(minted=shortfall, tx_hash=r.hash, balance=Decimal(str(ledger.iou_balance(buyer_addr, issuer_addr))))
+    return out
 
 
 def main() -> int:
@@ -32,31 +63,17 @@ def main() -> int:
     w = load_wallets(args.wallets)
     ledger = LedgerClient(w["rpc_url"])
     issuer, buyer = w["_wallets"]["issuer"], w["_wallets"]["buyer"]
-    issuer_addr, buyer_addr = issuer.classic_address, buyer.classic_address
-
-    lines = ledger.client.request(AccountLines(account=buyer_addr, peer=issuer_addr)).result.get("lines", [])
-    line = next((l for l in lines if l["currency"] == ledger.currency), None)
-    balance = Decimal(line["balance"]) if line else Decimal(0)
-    limit = Decimal(line["limit"]) if line else Decimal(0)
-    print(f"buyer {buyer_addr}\n  spendable RLUSD: {balance}\n  trust-line limit: {limit}\n  target: {args.target}")
-
-    if balance >= args.target:
-        print("nothing to do: balance already at or above target")
-        return 0
-    shortfall = args.target - balance
-
-    if limit < args.target:
-        new_limit = max(args.target * 10, Decimal("1000000000"))
-        r = ledger.create_trustline(buyer, issuer_addr, limit=str(new_limit))
-        print(f"  TrustSet limit -> {new_limit}: {r.result} {r.hash}")
-        if not r.ok:
-            return 1
-
-    r = ledger.issue(issuer, buyer_addr, str(shortfall))
-    print(f"  Payment issuer -> buyer {shortfall} RLUSD: {r.result} {r.hash}")
-    if not r.ok:
+    before = ledger.iou_balance(buyer.classic_address, issuer.classic_address)
+    print(f"buyer {buyer.classic_address}\n  spendable RLUSD: {before}\n  target: {args.target}")
+    try:
+        res = top_up(ledger, issuer, buyer, args.target)
+    except RuntimeError as exc:
+        print(f"  {exc}")
         return 1
-    print(f"  spendable RLUSD now: {ledger.iou_balance(buyer_addr, issuer_addr)}")
+    if res["minted"] == 0:
+        print("nothing to do: balance already at or above target")
+    else:
+        print(f"  spendable RLUSD now: {res['balance']}")
     return 0
 
 

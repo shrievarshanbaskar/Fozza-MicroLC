@@ -293,6 +293,14 @@ class LedgerClient:
                 return Decimal(line["balance"])
         return Decimal("0")
 
+    def trust_limit(self, address: str, issuer: str) -> Decimal:
+        """The holder-side limit of the trust line to `issuer` (0 when no line exists)."""
+        lines = self.client.request(AccountLines(account=address, peer=issuer)).result.get("lines", [])
+        for line in lines:
+            if line.get("currency") == self.currency:
+                return Decimal(line["limit"])
+        return Decimal("0")
+
     def xrp_balance(self, address: str) -> Decimal:
         info = self.client.request(AccountInfo(account=address, ledger_index="validated")).result
         return Decimal(info["account_data"]["Balance"]) / Decimal(1_000_000)

@@ -90,8 +90,10 @@ It enables `asfAllowTrustLineLocking` (flag 17) on the issuer so RLUSD can be es
 `asfDefaultRipple` so holders can pay each other.
 
 Top up the demo buyer between runs. Every lock parks 101% of the credit in escrow, and whatever the
-seller keeps leaves the buyer with less to spend next time. The lock step refuses to start when the
-buyer cannot cover 101% and tells you to run:
+seller keeps leaves the buyer with less to spend next time. With `DEMO_AUTO_TOPUP=true` in `.env`
+(the default in `.env.example`, testnet demo only) the lock pre-flight mints the shortfall from the
+test issuer itself and records the mint in the deal's feed. With the flag off, the lock step refuses
+to start when the buyer cannot cover 101% and tells you to run:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\topup_buyer.py     # mints from the test issuer until the buyer holds 100,000 RLUSD
@@ -201,6 +203,9 @@ the right tool for that stream; x402 remains right for buying a fact.
   is reliable. All LLM calls use pydantic schemas; no free text is parsed.
 * **Wallet custody.** The demo server signs for buyer and platform from `state/wallets.json`. In
   production each party signs its own EscrowCreate and the platform holds only fulfillments.
+  With `DEMO_AUTO_TOPUP=true` the lock pre-flight also mints RLUSD from our own testnet issuer to
+  the buyer when it cannot cover 101%; that is testnet demo behaviour only and has no production
+  analogue, since real RLUSD is issued by Ripple and a real buyer funds its own wallet.
 
 ## 7. Trust and governance
 

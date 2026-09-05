@@ -41,9 +41,16 @@ from ucp_articles import ARTICLES  # noqa: E402
 from verifier_agent import BudgetGuard, OracleClient, make_verifier  # noqa: E402
 from xrpl_escrow import EXPLORER_ACCOUNT, EXPLORER_TX, LedgerClient, load_wallets, ripple_now  # noqa: E402
 
+from scripts.topup_buyer import top_up  # noqa: E402
+
 STATE = Path("state")
 DEALS = STATE / "deals"
 EXPIRY = int(os.getenv("ESCROW_EXPIRY_SECONDS", "180"))
+DEMO_TOPUP_TARGET = 200_000  # RLUSD the demo buyer is refilled to when DEMO_AUTO_TOPUP is on
+
+
+def _demo_auto_topup() -> bool:
+    return os.getenv("DEMO_AUTO_TOPUP", "").strip().lower() in ("1", "true", "yes", "on")
 app = FastAPI(title="MicroLC API")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 _lock = threading.Lock()
@@ -218,8 +225,22 @@ def lock(deal_id: str, expiry_seconds: Optional[int] = None):
     if not w:
         raise HTTPException(503, "no wallets; run scripts/bootstrap_wallets.py")
     # pre-flight: read the buyer's spendable RLUSD and refuse to submit a ladder it cannot fund
+    ledger = _ledger()
+    buyer_addr, issuer_addr = w["wallets"]["buyer"]["address"], w["wallets"]["issuer"]["address"]
     need = money(total_locked(st["lc"]["amount"]))
-    have = money(_ledger().iou_balance(w["wallets"]["buyer"]["address"], w["wallets"]["issuer"]["address"]))
+    have = money(ledger.iou_balance(buyer_addr, issuer_addr))
+    if have < need and _demo_auto_topup():
+        # testnet demo only: mint the shortfall from our own test issuer so the demo never stalls on funds
+        try:
+            res = top_up(ledger, w["_wallets"]["issuer"], w["_wallets"]["buyer"], DEMO_TOPUP_TARGET, log=lambda *_: None)
+        except Exception as exc:  # fall through to the ordinary warning path
+            _warn(st, "DEMO_TOPUP_FAILED", f"Demo top-up failed: {type(exc).__name__}: {exc}")
+            res = None
+        if res and res["minted"] > 0:
+            _warn(st, "INFO", f"Demo top-up: minted {fmt(res['minted'])} RLUSD from test issuer")
+            feed_add(st, f"Payment demo top-up {fmt(res['minted'])} RLUSD issuer -> buyer (testnet only)", res["tx_hash"],
+                     "tesSUCCESS", {"kind": "topup"})
+            have = money(res["balance"])
     if have < need:
         _insufficient(st, need, have)
         save_state(deal_id, st)
