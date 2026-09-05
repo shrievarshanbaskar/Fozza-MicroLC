@@ -35,10 +35,11 @@ load_dotenv()
 from doc_generator import DOC_FILES, PRESETS, build_presentation, generate_set  # noqa: E402
 from examiner import RULES, TemplateParser, examine, get_parser  # noqa: E402
 from negotiator_graph import AgentOffer, ScriptedAgent, build_graph, initial_state, stream  # noqa: E402
-from settlement_engine import REFUSED_M, Deal, SettlementEngine, normalize_m, payout_for, payout_table  # noqa: E402
+from settlement_engine import (REFUSED_M, Deal, InsufficientFunds, SettlementEngine, fmt, money,  # noqa: E402
+                               normalize_m, payout_for, payout_table, total_locked)
 from ucp_articles import ARTICLES  # noqa: E402
 from verifier_agent import BudgetGuard, OracleClient, make_verifier  # noqa: E402
-from xrpl_escrow import EXPLORER_ACCOUNT, EXPLORER_TX, LedgerClient, load_wallets  # noqa: E402
+from xrpl_escrow import EXPLORER_ACCOUNT, EXPLORER_TX, LedgerClient, load_wallets, ripple_now  # noqa: E402
 
 STATE = Path("state")
 DEALS = STATE / "deals"
@@ -193,14 +194,38 @@ def run_examine(deal_id: str, parser: str = "auto"):
     return public_view(st)
 
 
+def _warn(st: dict, code: str, message: str) -> None:
+    """Operator-facing warning the console shows as a banner. Never an exception, never a LedgerError string."""
+    st.setdefault("warnings", []).append({"ts_ms": int(time.time() * 1000), "code": code, "message": message})
+
+
+def _insufficient(st: dict, need, have) -> None:
+    """Pre-flight failed: stay at EXAMINED with no escrow record so the Lock button re-enables."""
+    _warn(st, "INSUFFICIENT_RLUSD", f"Insufficient RLUSD: need {fmt(need)}, have {fmt(have)} — run scripts/topup_buyer.py")
+    st["escrow"] = None
+    st["status"] = "EXAMINED"
+
+
 @app.post("/api/deal/{deal_id}/lock")
 def lock(deal_id: str, expiry_seconds: Optional[int] = None):
     st = load_state(deal_id)
-    if st.get("escrow") and st["escrow"].get("status") in ("LOCKING", "LOCKED"):
+    if not st.get("examination"):
+        raise HTTPException(400, "examine the deal first")
+    esc = st.get("escrow")
+    if esc and esc.get("status") in ("LOCKING", "LOCKED"):
         return public_view(st)
     w = _wallets()
     if not w:
         raise HTTPException(503, "no wallets; run scripts/bootstrap_wallets.py")
+    # pre-flight: read the buyer's spendable RLUSD and refuse to submit a ladder it cannot fund
+    need = money(total_locked(st["lc"]["amount"]))
+    have = money(_ledger().iou_balance(w["wallets"]["buyer"]["address"], w["wallets"]["issuer"]["address"]))
+    if have < need:
+        _insufficient(st, need, have)
+        save_state(deal_id, st)
+        return public_view(st)
+    if esc and esc.get("tranches"):
+        st.setdefault("lock_attempts", []).append(esc)  # keep the hashes of a failed attempt
     st["escrow"] = {"status": "LOCKING", "tranches": []}
     st["status"] = "LOCKING"
     save_state(deal_id, st)
@@ -223,14 +248,47 @@ def _lock_worker(deal_id: str, expiry: int) -> None:
         st["escrow"] = deal.to_dict(public=False)
         st["escrow"]["lock_seconds"] = round(time.time() - t0, 1)
         for t in deal.tranches:
-            feed_add(st, f"EscrowCreate {t.name} {t.amount} RLUSD -> {t.destination}", t.create_hash,
-                     "tesSUCCESS" if t.status == "LOCKED" else "FAILED", {"kind": "create", "tranche": t.index})
-        st["status"] = "LOCKED" if deal.status == "LOCKED" else "LOCK_FAILED"
+            if t.create_hash:
+                feed_add(st, f"EscrowCreate {t.name} {t.amount} RLUSD -> {t.destination}", t.create_hash,
+                         t.create_result or ("tesSUCCESS" if t.create_hash else "FAILED"), {"kind": "create", "tranche": t.index})
+        if deal.status == "LOCKED":
+            if st.get("status") == "LOCKING":  # never clobber a status another request wrote meanwhile
+                st["status"] = "LOCKED"
+        else:
+            landed = [t for t in deal.tranches if t.status in ("RETURNED", "RETURN_PENDING")]
+            pending = [t for t in landed if t.status == "RETURN_PENDING"]
+            for t in landed:
+                if t.action_hash:
+                    feed_add(st, f"EscrowCancel {t.name} {t.amount} RLUSD (rollback, returned)", t.action_hash,
+                             t.action_result or "", {"kind": "rollback", "tranche": t.index})
+            msg = (f"{deal.error}. {len(landed)} escrow(s) landed and were rolled back: "
+                   f"{len(landed) - len(pending)} returned now, {len(pending)} return automatically after CancelAfter.")
+            _warn(st, "LOCK_FAILED", msg)
+            st["escrow"]["error"] = msg
+            st["status"] = "LOCK_FAILED"
+            if pending:
+                _schedule_sweep(deal_id, max(t.cancel_after or 0 for t in pending))
+    except InsufficientFunds as exc:
+        st = load_state(deal_id)
+        _insufficient(st, exc.need, exc.have)
     except Exception as exc:  # surface, never crash the API
         st = load_state(deal_id)
         st["escrow"] = {"status": "FAILED", "error": f"{type(exc).__name__}: {exc}", "tranches": []}
+        _warn(st, "LOCK_FAILED", f"Lock failed before any escrow was created: {type(exc).__name__}: {exc}")
         st["status"] = "LOCK_FAILED"
     save_state(deal_id, st)
+
+
+def _schedule_sweep(deal_id: str, cancel_after: int) -> None:
+    """Return RETURN_PENDING tranches to the buyer as soon as the ledger lets anyone cancel them."""
+    def run():
+        while ripple_now() <= cancel_after + 5:
+            time.sleep(5)
+        try:
+            _do_sweep(deal_id)
+        except Exception:  # best effort; the operator can still press Sweep
+            pass
+    threading.Thread(target=run, daemon=True).start()
 
 
 # --------------------------------------------------------------------------- negotiation (SSE)
@@ -287,6 +345,8 @@ def negotiate_stream(deal_id: str, mode: str = "live"):
     st = load_state(deal_id)
     if not st.get("examination"):
         raise HTTPException(400, "examine the deal first")
+    if (st.get("escrow") or {}).get("status") == "LOCKING":
+        raise HTTPException(409, "escrow lock still in progress; negotiate once the ladder is LOCKED")
 
     def gen():
         state = load_state(deal_id)
@@ -401,21 +461,27 @@ def settle(deal_id: str, req: SettleReq):
     return {"m": normalize_m(m), "events": events, "deal": public_view(load_state(deal_id))}
 
 
-@app.post("/api/deal/{deal_id}/sweep")
-def sweep(deal_id: str):
+def _do_sweep(deal_id: str) -> tuple[list[dict], dict]:
     st = load_state(deal_id)
     esc = st.get("escrow")
     if not esc or not esc.get("tranches"):
         raise HTTPException(400, "nothing locked")
     w = _wallets()
     eng = SettlementEngine(_ledger())
-    deal = Deal.from_dict({k: v for k, v in esc.items() if k not in ("lock_seconds",)})
+    deal = Deal.from_dict({k: v for k, v in esc.items() if k not in ("lock_seconds", "error")})
+    deal.error = esc.get("error")
     events = list(eng.sweep_expired(deal, w["_wallets"]["platform"]))
     st["escrow"] = {**deal.to_dict(public=False), "lock_seconds": esc.get("lock_seconds")}
     for ev in events:
         feed_add(st, f"EscrowCancel {ev['name']} {ev['amount']} RLUSD (expired, returned)", ev["hash"], ev.get("result") or "",
                  {"kind": "sweep", "tranche": ev["index"]})
     save_state(deal_id, st)
+    return events, st
+
+
+@app.post("/api/deal/{deal_id}/sweep")
+def sweep(deal_id: str):
+    events, st = _do_sweep(deal_id)
     return {"swept": events, "deal": public_view(st)}
 
 

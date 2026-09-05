@@ -253,18 +253,23 @@ class LedgerClient:
         tickets = self.create_tickets(wallet, len(txs))
         signed = [autofill_and_sign(_with_ticket(tx, t), self.client, wallet) for tx, t in zip(txs, tickets)]
 
-        def _fire(stx: Transaction) -> str:
+        def _fire(stx: Transaction) -> tuple[str, str]:
+            """Never raise: one rejected tx must not hide the hashes of the others in the batch."""
             resp = submit(stx, self.client).result
-            eng = resp.get("engine_result", "")
-            if not (eng == "tesSUCCESS" or eng.startswith("ter")):
-                raise LedgerError(f"submit rejected: {eng}")
-            return resp["tx_json"]["hash"]
+            return resp.get("tx_json", {}).get("hash", ""), resp.get("engine_result", "")
 
         with ThreadPoolExecutor(max_workers=len(signed)) as pool:
-            hashes = list(pool.map(_fire, signed))
-        results = [self.wait_for_tx(h) for h in hashes]
-        for r, t in zip(results, tickets):
+            fired = list(pool.map(_fire, signed))
+        results = []
+        for (tx_hash, eng), t in zip(fired, tickets):
+            # tes and tec results are applied to a ledger (tec burns the fee and consumes the ticket) and
+            # ter is retried by the network, so all three can be awaited. tem/tef/tel never make it in.
+            if tx_hash and (eng == "tesSUCCESS" or eng.startswith(("tec", "ter"))):
+                r = self.wait_for_tx(tx_hash)
+            else:
+                r = TxResult(False, tx_hash, eng or "unknown", raw={"engine_result": eng})
             r.ticket_sequence = t
+            results.append(r)
         return results
 
     def wait_for_tx(self, tx_hash: str, timeout: float = 60.0) -> TxResult:

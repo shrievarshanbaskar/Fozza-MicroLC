@@ -33,6 +33,15 @@ test("discrepant preset end to end without refresh", async ({ page }) => {
   await page.getByTestId("fields-toggle").click();
   await expect(page.getByTestId("doc-viewer")).toContainText("3900");
 
+  // guard: agents may not negotiate before the ladder is on the ledger
+  await expect(page.getByTestId("negotiate-btn")).toBeDisabled();
+  await expect(page.getByTestId("negotiation-console")).toContainText("Lock the escrow ladder first");
+  await page.getByTestId("lock-top-btn").click();
+  await expect(page.getByTestId("tranche-base")).toHaveAttribute("data-status", "LOCKED", { timeout: 200_000 });
+  await expect(page.getByTestId("tranche-fee")).toHaveAttribute("data-status", "LOCKED");
+  await expect(page.getByTestId("escrow-balance")).toContainText("10,100.00 RLUSD in escrow");
+  await expect(page.getByTestId("negotiate-btn")).toBeEnabled();
+
   await page.getByTestId(`mode-${MODE}`).click();
   await page.getByTestId("negotiate-btn").click();
   await expect(page.locator('[data-testid="event"][data-actor="verifier"][data-action="pay"]').first()).toBeVisible({ timeout: 120_000 });
@@ -45,6 +54,12 @@ test("discrepant preset end to end without refresh", async ({ page }) => {
   await expect(page.getByTestId("evidence-R15")).toBeVisible();
   await expect(page.getByTestId("verifier-log")).toContainText("Independent Evidence Verified");
   await expect(page.getByTestId("stat-negotiated-price")).toContainText("Discrepancy Adj.");
+
+  // finality lists every on-chain hash: 7 creates + at least 5 finishes (+ the x402 payment in live); fee row sums real drops
+  await expect.poll(() => page.locator('[data-testid="finality-item"]').count(), { timeout: 60_000 }).toBeGreaterThanOrEqual(MODE === "live" ? 13 : 12);
+  await expect(page.locator('[data-testid="finality-item"]').first()).toContainText("EscrowCreate base");
+  await expect(page.getByTestId("xrp-fees")).toContainText("XRP", { timeout: 60_000 });
+  await expect(page.getByTestId("fees")).not.toContainText("unavailable");
 
   expect(page.url()).toBe(url); // same page, no refresh
   const realErrors = errors.filter((e) => !/favicon|net::ERR_ABORTED|Download the React DevTools/i.test(e));

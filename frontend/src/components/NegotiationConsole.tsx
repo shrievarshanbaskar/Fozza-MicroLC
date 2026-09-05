@@ -15,8 +15,8 @@ const REVEAL_MS = 300;
 
 export type StreamStatus = "idle" | "streaming" | "done" | "error";
 
-export default function NegotiationConsole({ dealId, enabled, mode, setMode, onUpdate, onSettlement, onDone, onStatus, onEvent }: {
-  dealId: string | null; enabled: boolean; mode: "live" | "mock"; setMode: (m: "live" | "mock") => void;
+export default function NegotiationConsole({ dealId, enabled, disabledReason = null, mode, setMode, onUpdate, onSettlement, onDone, onStatus, onEvent }: {
+  dealId: string | null; enabled: boolean; disabledReason?: string | null; mode: "live" | "mock"; setMode: (m: "live" | "mock") => void;
   onUpdate: (u: StreamUpdate) => void; onSettlement: (s: SettlementEvent) => void; onDone: (d: DoneEvent) => void; onStatus: (s: StreamStatus) => void;
   onEvent?: (e: AgentEvent) => void;
 }) {
@@ -72,15 +72,22 @@ export default function NegotiationConsole({ dealId, enabled, mode, setMode, onU
             <InfoTip tip="live"><button data-testid="mode-live" className={`px-2.5 py-1 font-bold tracking-wider ${mode === "live" ? "bg-success/30 text-green-100" : "text-white/50"}`} onClick={() => setMode("live")}>LIVE</button></InfoTip>
             <InfoTip tip="mock"><button data-testid="mode-mock" className={`px-2.5 py-1 font-bold tracking-wider ${mode === "mock" ? "bg-amber-500/30 text-amber-100" : "text-white/50"}`} onClick={() => setMode("mock")}>MOCK</button></InfoTip>
           </div>
-          <button data-testid="negotiate-btn" disabled={!enabled || status === "streaming"} onClick={start} className="btn-primary !py-1.5 !text-xs">
-            {status === "streaming" ? "Running…" : status === "done" ? "Replay" : "Negotiate & Settle"}
-          </button>
+          {(() => {
+            const btn = (
+              <button data-testid="negotiate-btn" disabled={!enabled || status === "streaming"} onClick={start} className="btn-primary !py-1.5 !text-xs"
+                title={!enabled && disabledReason ? disabledReason : undefined}>
+                {status === "streaming" ? "Running…" : status === "done" ? "Replay" : "Negotiate & Settle"}
+              </button>
+            );
+            // the guard explains itself on hover and focus: money must be on the ledger before agents talk about it
+            return !enabled && disabledReason ? <InfoTip tip={disabledReason === "Lock the escrow ladder first" ? "negotiateLocked" : disabledReason}>{btn}</InfoTip> : btn;
+          })()}
         </div>
       </header>
       <div ref={list} onScroll={onScroll} className="max-h-[460px] overflow-y-auto overflow-x-hidden p-3 space-y-1.5 text-xs" data-testid="event-list">
         {events.length === 0 && (
           status === "streaming" ? <div className="space-y-2">{[0, 1, 2].map((i) => <div key={i} className="skeleton h-9" />)}</div>
-          : <div className="p-4 muted">{enabled ? "Ready. Agents negotiate the discount ladder; the referee is code." : "Examine the documents first."}</div>
+          : <div className="p-4 muted" data-testid="negotiation-placeholder">{enabled ? "Ready. Agents negotiate the discount ladder; the referee is code." : disabledReason ?? "Examine the documents first."}</div>
         )}
         {events.map((e, i) => {
           const latency = e.latency_ms ?? (prev !== null ? e.ts_ms - prev : null);

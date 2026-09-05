@@ -12,6 +12,8 @@ test("screenshots", async ({ page }) => {
   await page.getByTestId("create-btn").click();
   await page.getByTestId("examine-btn").click();
   await page.getByTestId("k-badge").waitFor({ timeout: 90_000 });
+  await page.getByTestId("lock-top-btn").click();
+  await page.locator('[data-testid="tranche-fee"][data-status="LOCKED"]').waitFor({ timeout: 200_000 });
   await page.getByTestId("mode-mock").click();
   await page.getByTestId("negotiate-btn").click();
   await page.getByTestId("payout").waitFor({ timeout: 120_000 });

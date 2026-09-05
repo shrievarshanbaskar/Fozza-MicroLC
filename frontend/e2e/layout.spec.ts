@@ -15,6 +15,8 @@ async function openExaminedDeal(page: import("@playwright/test").Page) {
 test("console scrolls as a page with only the three stream panels scrolling internally", async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await openExaminedDeal(page);
+  await page.getByTestId("lock-top-btn").click();
+  await expect(page.getByTestId("tranche-fee")).toHaveAttribute("data-status", "LOCKED", { timeout: 200_000 });
   await page.getByTestId("mode-mock").click();
   await page.getByTestId("negotiate-btn").click();
   await expect(page.getByTestId("payout")).toBeVisible({ timeout: 120_000 });

@@ -7,8 +7,9 @@ export type Discrepancy = {
 };
 export type ParsedDoc = Record<string, unknown> & { _parser_fallback?: string };
 export type Examination = { k: number; verdict: string; parser: string; discrepancies: Discrepancy[]; fatal: string[]; documents: Record<string, ParsedDoc | null>; elapsed_ms?: number };
-export type Tranche = { index: number; name: string; kind: string; pct: string; amount: string; destination: string; status: string; create_hash?: string | null; action_hash?: string | null; action_result?: string | null; offer_sequence?: number | null; cancel_after?: number | null; condition?: string | null };
-export type Escrow = { status: string; tranches: Tranche[]; lock_seconds?: number; error?: string };
+export type Tranche = { index: number; name: string; kind: string; pct: string; amount: string; destination: string; status: string; create_hash?: string | null; create_result?: string | null; action_hash?: string | null; action_result?: string | null; offer_sequence?: number | null; cancel_after?: number | null; condition?: string | null };
+export type Escrow = { status: string; tranches: Tranche[]; lock_seconds?: number; error?: string | null };
+export type Warning = { ts_ms: number; code: string; message: string };
 export type AgentEvent = { ts_ms: number; round: number; actor: string; action: string; rungs: number | null; cited: string[]; rationale: string; latency_ms?: number | null; valid?: boolean };
 export type SettlementEvent = { index: number; name: string; kind: string; amount: string; destination: string; action: string; status: string; hash: string | null; result: string | null };
 export type Evidence = { rule_id: string; verdict: string; summary: string; provider?: string; tx_hash?: string | null; price_rlusd?: string; signature?: string | null };
@@ -23,7 +24,7 @@ export type DealState = {
   deal_id: string; preset: string; status: string; lc: Record<string, unknown>; documents: string[]; parties: Record<string, string>;
   examination: Examination | null; escrow: Escrow | null; negotiation: Negotiation | null;
   settlement: { m: number; payout: Payout; events: SettlementEvent[]; mode: string; seconds?: number } | null;
-  ledger_feed: FeedItem[]; payout_table: Payout[];
+  ledger_feed: FeedItem[]; payout_table: Payout[]; warnings?: Warning[];
 };
 export type Env = { network: string; wallets: Record<string, { address: string; explorer: string }>; presets: string[]; rules: Record<string, { code: string; article: string; severity: string; checkable: boolean }>; articles: Record<string, string>; expiry_seconds: number; groq: boolean; models: { small?: string; large?: string } };
 export type DealSummary = { deal_id: string; preset: string; status: string; k: number | null };
@@ -56,16 +57,15 @@ export const short = (h?: string | null) => (h ? `${h.slice(0, 6)}…${h.slice(-
 export const rlusd = (v: string | number | null | undefined, digits = 2) =>
   v === null || v === undefined || v === "" ? "—" : Number(v).toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
-/** Read the Fee (drops) of validated transactions straight from the public testnet RPC. */
-export async function txFeesDrops(hashes: string[]): Promise<number | null> {
+/** Sum the Fee (drops) of validated transactions. Goes through the same-origin /api/fees route because the
+ *  public RPC has no CORS headers. Returns null only when no hash resolved, so callers can hide the row. */
+export async function txFeesDrops(hashes: string[]): Promise<{ drops: number; counted: number } | null> {
+  if (!hashes.length) return null;
   try {
-    const fees = await Promise.all(hashes.map(async (h) => {
-      const r = await fetch(XRPL_RPC, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ method: "tx", params: [{ transaction: h }] }) });
-      const d = await r.json();
-      const fee = d?.result?.tx_json?.Fee ?? d?.result?.Fee;
-      return fee ? Number(fee) : 0;
-    }));
-    return fees.reduce((a, b) => a + b, 0);
+    const r = await fetch("/api/fees", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ hashes }) });
+    if (!r.ok) return null;
+    const d = (await r.json()) as { drops: number; counted: number };
+    return d.counted > 0 ? { drops: d.drops, counted: d.counted } : null;
   } catch {
     return null;
   }

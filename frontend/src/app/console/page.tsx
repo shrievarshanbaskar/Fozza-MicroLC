@@ -103,13 +103,21 @@ function Console() {
   const total = env ? Object.keys(env.rules).length : 19;
   const parties = { buyer: String(deal?.lc?.applicant ?? "Importer"), seller: String(deal?.lc?.beneficiary ?? "Exporter") };
   const lockedTotal = deal?.escrow?.tranches?.length ? deal.escrow.tranches.filter((t) => t.status === "LOCKED").reduce((a, t) => a + Number(t.amount), 0) : null;
+  const escrowStatus = deal?.escrow?.status ?? null;
+  const isLocked = escrowStatus === "LOCKED";
+  // Lock is offered until money is on the ledger or a lock is in flight; a failed lock re-enables it.
+  const canLock = !!deal?.examination && !!deal && (!deal.escrow || escrowStatus === "FAILED") && busy === null;
+  // Agents only negotiate money that is on the ledger; a finished negotiation can always be replayed.
+  const canNegotiate = busy === null && (isLocked || !!deal?.negotiation?.status && ["CLOSED", "REFUSED"].includes(deal.negotiation.status) && !!deal?.escrow?.tranches?.some((t) => t.create_hash));
   const stageAction = () => {
     const newDeal = <button key="new" data-testid="create-btn" className={deal ? "btn-ghost" : "btn-primary"} disabled={busy !== null} onClick={create}>{busy === "create" ? "Creating…" : "New Deal"}</button>;
     if (!deal) return newDeal;
     if (!deal.examination) return <>{newDeal}<button data-testid="examine-btn" className="btn-primary" disabled={busy !== null} onClick={examine}>{busy === "examine" ? "Examining…" : "Examine Documents"}</button></>;
-    if (!deal.escrow) return <>{newDeal}<InfoTip tip="lock"><button data-testid="lock-top-btn" className="btn-primary" disabled={busy !== null} onClick={lock}>Lock 101% on XRPL</button></InfoTip></>;
+    if (canLock) return <>{newDeal}<InfoTip tip="lock"><button data-testid="lock-top-btn" className="btn-primary" disabled={busy !== null} onClick={lock}>{deal.escrow?.status === "FAILED" ? "Retry Lock 101% on XRPL" : "Lock 101% on XRPL"}</button></InfoTip></>;
     return newDeal;
   };
+  const latestWarning = deal?.warnings?.length ? deal.warnings[deal.warnings.length - 1] : null;
+  const showWarning = latestWarning && (deal?.status === "EXAMINED" || deal?.status === "LOCK_FAILED");
   const onSettlement = (s: SettlementEvent) => {
     setSettlement((prev) => ({ ...prev, [s.index]: s }));
     if (s.hash) setPushed((p) => [...p, { ts_ms: Date.now(), label: `Escrow${s.action === "finish" ? "Finish" : "Cancel"} ${s.name} ${s.amount} RLUSD`, hash: s.hash, result: s.result || "", explorer: null }]);
@@ -120,13 +128,13 @@ function Console() {
     presentation: <DocumentViewer key="presentation" dealId={deal?.deal_id ?? null} discrepancies={discrepancies} parsed={deal?.examination?.documents}
       tab={docTab} setTab={setDocTab} mode={docMode} setMode={setDocMode} expanded={docExpanded} onToggleExpand={() => setDocExpanded((e) => !e)} />,
     verifier: <VerifierLog key="verifier" events={liveEvents} evidence={evidence} verifier={verifier} streaming={streamStatus === "streaming"} />,
-    negotiation: <NegotiationConsole key="negotiation" dealId={deal?.deal_id ?? null} enabled={!!deal?.examination && busy === null} mode={mode} setMode={setMode}
+    negotiation: <NegotiationConsole key="negotiation" dealId={deal?.deal_id ?? null} enabled={canNegotiate} disabledReason={!deal?.examination ? "Examine the documents first." : isLocked ? null : "Lock the escrow ladder first"} mode={mode} setMode={setMode}
       onEvent={(e) => setLiveEvents((ev) => [...ev, e])}
       onUpdate={(u) => { setLiveDisc(u.discrepancies); setEvidence(u.evidence || []); setVerifier(u.verifier ?? null); }}
       onSettlement={onSettlement}
       onDone={(d) => { setPayout(d.payout); if (deal) load(deal.deal_id).catch(() => {}); }}
       onStatus={(s) => { setStreamStatus(s); if (s === "streaming") setLiveEvents([]); }} />,
-    ladder: <ProofStrip key="ladder" escrow={deal?.escrow ?? null} settlement={settlement} payout={payout} lcAmount={lcAmount} onLock={lock} onSweep={sweep} lockEnabled={!!deal?.examination && !deal?.escrow && busy === null} />,
+    ladder: <ProofStrip key="ladder" escrow={deal?.escrow ?? null} settlement={settlement} payout={payout} lcAmount={lcAmount} onLock={lock} onSweep={sweep} lockEnabled={canLock} />,
     parties: <PartiesCard key="parties" env={env} parties={parties} />,
     finality: <FinalityCard key="finality" deal={deal} pushed={pushed} />,
     fees: <FeesCard key="fees" deal={deal} lcAmount={lcAmount} pushed={pushed} />,
@@ -177,6 +185,7 @@ function Console() {
         </div>
         <div className="flex flex-col gap-3 px-3 md:px-4">
         {error && <div className="rounded-btn border border-error/40 bg-error/10 px-3 py-2 text-xs text-red-200" data-testid="error">{error}</div>}
+        {showWarning && <div className="rounded-btn border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100" data-testid="warning" data-code={latestWarning.code}><span className="font-semibold mr-2">Warning</span>{latestWarning.message}</div>}
 
         {view === "wallets" && <WalletsView env={env} />}
         {view === "log" && <VerificationLogView />}
@@ -270,35 +279,65 @@ function PartiesCard({ env, parties }: { env: Env | null; parties: { buyer: stri
   );
 }
 
+/** Every on-chain hash the deal produced, oldest first: EscrowCreate, x402 Payment, EscrowFinish, EscrowCancel. */
+function dealTransactions(deal: DealState | null, pushed: FeedItem[]): FeedItem[] {
+  const items: FeedItem[] = [...(deal?.ledger_feed ?? []), ...pushed].filter((f) => f.hash);
+  const payEvents = (deal?.negotiation?.events ?? []).filter((e) => e.actor === "verifier" && e.action === "pay");
+  const seen = new Set(items.map((f) => f.hash));
+  for (const ev of deal?.negotiation?.evidence ?? []) {
+    if (!ev.tx_hash || seen.has(ev.tx_hash)) continue;
+    seen.add(ev.tx_hash);
+    const pay = payEvents.find((p) => p.cited?.includes(ev.tx_hash as string)) ?? payEvents[0];
+    items.push({ ts_ms: pay?.ts_ms ?? 0, label: `x402 Payment ${ev.price_rlusd ?? ""} RLUSD -> ${ev.provider ?? "oracle"}`, hash: ev.tx_hash, result: "tesSUCCESS", explorer: null, kind: "x402" });
+  }
+  const byHash = new Map<string, FeedItem>();
+  for (const f of items.sort((a, b) => a.ts_ms - b.ts_ms)) if (!byHash.has(f.hash as string)) byHash.set(f.hash as string, f);
+  return Array.from(byHash.values());
+}
+
 function FinalityCard({ deal, pushed }: { deal: DealState | null; pushed: FeedItem[] }) {
-  const items = [...(deal?.ledger_feed ?? []), ...pushed].filter((f) => f.hash).sort((a, b) => b.ts_ms - a.ts_ms).slice(0, 3);
+  const items = dealTransactions(deal, pushed);
   return (
     <section className="card" data-testid="finality">
-      <header className="card-head"><span className="micro text-white/70 flex items-center gap-2">XRPL Finality <InfoTip tip="finality" /></span></header>
-      <ul className="p-3 space-y-2 text-xs">
+      <header className="card-head">
+        <span className="micro text-white/70 flex items-center gap-2">XRPL Finality <InfoTip tip="finality" /></span>
+        {items.length > 0 && <span className="badge bg-white/10 text-white/60" data-testid="finality-count">{items.length} tx</span>}
+      </header>
+      <ol className="p-3 space-y-1.5 text-xs" data-testid="finality-list">
         {items.length === 0 && <li className="muted">No validated transactions yet.</li>}
         {items.map((f, i) => (
-          <li key={`${f.hash}-${i}`} className="flex items-center gap-2">
+          <li key={`${f.hash}-${i}`} className="flex items-center gap-2" data-testid="finality-item" data-kind={f.kind ?? "tx"}>
+            <span className="mono text-white/30 w-5 shrink-0 text-right">{i + 1}</span>
             <div className="min-w-0 flex-1"><div className="truncate text-white/90">{f.label}</div><Hash value={f.hash} /></div>
-            <span className={`badge ${f.result === "tesSUCCESS" ? "bg-success/20 text-green-300" : "bg-error/20 text-red-200"}`}>{f.result === "tesSUCCESS" ? "Success" : f.result}</span>
+            <span className={`badge shrink-0 ${f.result === "tesSUCCESS" ? "bg-success/20 text-green-300" : "bg-error/20 text-red-200"}`}>{f.result === "tesSUCCESS" ? "Validated" : f.result}</span>
           </li>
         ))}
-      </ul>
+      </ol>
     </section>
   );
 }
 
 function FeesCard({ deal, lcAmount, pushed }: { deal: DealState | null; lcAmount: number; pushed: FeedItem[] }) {
-  const [drops, setDrops] = useState<number | null | undefined>(undefined);
-  const hashes = useMemo(() => Array.from(new Set([...(deal?.ledger_feed ?? []), ...pushed].map((f) => f.hash).filter(Boolean) as string[])), [deal?.ledger_feed, pushed]);
-  useEffect(() => { if (!hashes.length) { setDrops(undefined); return; } txFeesDrops(hashes).then(setDrops); }, [hashes]);
+  const [fees, setFees] = useState<{ drops: number; counted: number } | null>(null);
+  const hashes = useMemo(() => dealTransactions(deal, pushed).map((f) => f.hash as string), [deal, pushed]);
+  useEffect(() => {
+    let cancelled = false;
+    if (!hashes.length) { setFees(null); return; }
+    txFeesDrops(hashes).then((r) => { if (!cancelled) setFees(r); });
+    return () => { cancelled = true; };
+  }, [hashes]);
   return (
     <section className="card" data-testid="fees">
       <header className="card-head"><span className="micro text-white/70 flex items-center gap-2">Fees <InfoTip tip="fees" /></span></header>
       <dl className="p-3 grid grid-cols-[1fr_auto] gap-y-2 text-xs">
         <dt className="muted">MicroLC platform fee (1%)</dt><dd className="mono text-amber-200">{deal ? `${rlusd(lcAmount * 0.01)} RLUSD` : "—"}</dd>
-        <dt className="muted">XRP network fees · {hashes.length} tx</dt>
-        <dd className="mono text-white/80">{drops === undefined ? "—" : drops === null ? "unavailable" : `${(drops / 1_000_000).toFixed(6)} XRP`}</dd>
+        {/* XRP fees are summed from the Fee field of each validated transaction; the row is hidden until at least one resolves */}
+        {fees && (
+          <>
+            <dt className="muted">XRP network fees · {fees.counted} tx</dt>
+            <dd className="mono text-white/80" data-testid="xrp-fees">{(fees.drops / 1_000_000).toFixed(6)} XRP</dd>
+          </>
+        )}
       </dl>
     </section>
   );

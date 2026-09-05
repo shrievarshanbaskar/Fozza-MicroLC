@@ -58,6 +58,7 @@ class Tranche:
     owner: Optional[str] = None
     offer_sequence: Optional[int] = None
     create_hash: Optional[str] = None
+    create_result: Optional[str] = None
     cancel_after: Optional[int] = None
     status: str = "PLANNED"  # PLANNED | LOCKED | RELEASED | RETURNED | RETURN_PENDING | FAILED
     action_hash: Optional[str] = None
@@ -150,7 +151,9 @@ class Deal:
     expiry_seconds: int = DEFAULT_EXPIRY_SECONDS
     tranches: list[Tranche] = field(default_factory=list)
     m: Optional[int] = None
-    status: str = "OPEN"  # OPEN | LOCKED | SETTLED | REFUSED
+    status: str = "OPEN"  # OPEN | LOCKED | FAILED | SETTLED | REFUSED
+    error: Optional[str] = None  # why a lock failed, in words the console can show
+    rollback: list = field(default_factory=list)  # events from returning a partial lock
 
     def to_dict(self, public: bool = True) -> dict:
         d = asdict(self)
@@ -166,16 +169,41 @@ class Deal:
         return cls(**d)
 
 
+class InsufficientFunds(RuntimeError):
+    """The buyer cannot cover 101% of the credit; nothing was submitted."""
+
+    def __init__(self, need, have):
+        self.need, self.have = fmt(need), fmt(have)
+        super().__init__(f"Insufficient RLUSD: need {self.need}, have {self.have} — run scripts/topup_buyer.py")
+
+
 class SettlementEngine:
     def __init__(self, ledger: LedgerLike, use_tickets: bool = False):
         self.ledger = ledger
         self.use_tickets = use_tickets
 
+    def preflight(self, buyer: str, issuer: str, lc_amount) -> None:
+        """Refuse to submit a ladder the buyer cannot fund. Ledgers without balance queries skip the check."""
+        query = getattr(self.ledger, "iou_balance", None)
+        if query is None:
+            return
+        need, have = money(total_locked(lc_amount)), money(query(buyer, issuer))
+        if have < need:
+            raise InsufficientFunds(need, have)
+
     def open_deal(self, lc_amount, buyer_wallet, seller: str, platform: str, issuer: str,
-                  expiry_seconds: int = DEFAULT_EXPIRY_SECONDS, deal_id: Optional[str] = None) -> Iterator[Deal]:
-        """Lock 101% in seven escrows. Yields the deal after every tranche so callers can stream progress."""
+                  expiry_seconds: int = DEFAULT_EXPIRY_SECONDS, deal_id: Optional[str] = None,
+                  preflight: bool = True) -> Iterator[Deal]:
+        """Lock 101% in seven escrows. Yields the deal after every tranche so callers can stream progress.
+
+        Raises InsufficientFunds before anything is submitted when the buyer cannot cover the ladder.
+        If some EscrowCreates land and others fail, the ones that landed are rolled back (see rollback)
+        and the deal ends FAILED with every hash recorded.
+        """
         deal = Deal(deal_id or uuid.uuid4().hex[:8], fmt(lc_amount), issuer, buyer_wallet.classic_address,
                     seller, platform, expiry_seconds, tranche_plan(lc_amount))
+        if preflight:
+            self.preflight(deal.buyer, issuer, lc_amount)
         dest = {"seller": seller, "platform": platform}
         for t in deal.tranches:
             t.condition, t.fulfillment, _ = make_condition()
@@ -186,20 +214,43 @@ class SettlementEngine:
             results = self.ledger.create_escrows_parallel(buyer_wallet, specs, issuer, expiry_seconds)
             for t, r in zip(deal.tranches, results):
                 self._record_create(t, r)
-            deal.status = "LOCKED" if all(t.status == "LOCKED" for t in deal.tranches) else "FAILED"
-            yield deal
-            return
-        for t in deal.tranches:
-            r = self.ledger.create_escrow(buyer_wallet, dest[t.destination], t.amount, issuer, t.condition,
-                                          expiry_seconds=expiry_seconds, memo=f"MicroLC {deal.deal_id} {t.name}")
-            self._record_create(t, r)
-            yield deal
-        deal.status = "LOCKED" if all(t.status == "LOCKED" for t in deal.tranches) else "FAILED"
+        else:
+            for t in deal.tranches:
+                r = self.ledger.create_escrow(buyer_wallet, dest[t.destination], t.amount, issuer, t.condition,
+                                              expiry_seconds=expiry_seconds, memo=f"MicroLC {deal.deal_id} {t.name}")
+                self._record_create(t, r)
+                yield deal
+                if not r.ok:
+                    break  # do not keep locking once a tranche has failed
+        if all(t.status == "LOCKED" for t in deal.tranches):
+            deal.status = "LOCKED"
+        else:
+            deal.status = "FAILED"
+            failed = [f"{t.name} {t.create_result}" for t in deal.tranches if t.status == "FAILED"]
+            deal.error = f"Lock failed: {'; '.join(failed)}"
+            self.rollback(deal, buyer_wallet)
         yield deal
+
+    def rollback(self, deal: Deal, canceller) -> list[dict]:
+        """Return every escrow of a partial lock to the buyer.
+
+        rippled refuses EscrowCancel before CancelAfter (tecNO_PERMISSION), so tranches that cannot be
+        cancelled yet are marked RETURN_PENDING and picked up by sweep_expired once they expire.
+        """
+        events = []
+        for t in deal.tranches:
+            if t.status != "LOCKED":
+                continue
+            r = self.ledger.cancel_escrow(canceller, t.owner, t.offer_sequence)
+            t.action_hash, t.action_result = r.hash, r.result
+            t.status = "RETURNED" if r.ok else "RETURN_PENDING"
+            events.append(self._event(t, "rollback", t.status))
+        deal.rollback = events
+        return events
 
     @staticmethod
     def _record_create(t: Tranche, r) -> None:
-        t.create_hash, t.offer_sequence = r.hash, r.offer_sequence
+        t.create_hash, t.offer_sequence, t.create_result = r.hash, r.offer_sequence, r.result
         t.status = "LOCKED" if r.ok else "FAILED"
         raw = getattr(r, "raw", None) or {}
         txj = raw.get("tx_json", raw) if isinstance(raw, dict) else {}

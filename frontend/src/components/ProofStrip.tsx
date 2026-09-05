@@ -15,8 +15,10 @@ const PLAN = [
 ];
 const RIPPLE_EPOCH = 946_684_800;
 
-type Seg = "released" | "processing" | "pending" | "returned" | "failed";
-function segment(status: string): Seg {
+type Seg = "released" | "processing" | "pending" | "returned" | "failed" | "notlocked";
+/** onLedger: this tranche's escrow exists (or existed) on XRPL. A PLANNED_* status without it is a plan, not money. */
+function segment(status: string, onLedger: boolean): Seg {
+  if (status.startsWith("PLANNED_") && !onLedger) return "notlocked";
   if (status === "RELEASED" || status === "PLANNED_RELEASE") return "released";
   if (status === "LOCKING" || status === "RETURN_PENDING") return "processing";
   if (status === "RETURNED" || status === "PLANNED_RETURN") return "returned";
@@ -29,8 +31,9 @@ const SEG_STYLE: Record<Seg, string> = {
   pending: "border-white/10 bg-white/5 text-white/50",
   returned: "border-slate-500/50 bg-slate-500/20 text-slate-200",
   failed: "border-error/60 bg-error/20 text-red-100",
+  notlocked: "border-dashed border-white/15 bg-white/[0.03] text-white/40",
 };
-const SEG_LABEL: Record<Seg, string> = { released: "✓ Released", processing: "● Processing", pending: "Pending", returned: "↩ Returned", failed: "✕ Failed" };
+const SEG_LABEL: Record<Seg, string> = { released: "✓ Released", processing: "● Processing", pending: "Pending", returned: "↩ Returned", failed: "✕ Failed", notlocked: "Not locked" };
 
 export default function ProofStrip({ escrow, settlement, payout, lcAmount, onLock, onSweep, lockEnabled }: {
   escrow: Escrow | null; settlement: Record<number, SettlementEvent>; payout: Payout | null; lcAmount: number; onLock: () => void; onSweep: () => void; lockEnabled: boolean;
@@ -42,12 +45,15 @@ export default function ProofStrip({ escrow, settlement, payout, lcAmount, onLoc
     const s = settlement[p.index];
     const status = s?.status || t?.status || (escrow?.status === "LOCKING" ? "LOCKING" : "PLANNED");
     const amount = t?.amount ?? (lcAmount * p.pct).toFixed(2);
-    const seg = segment(status);
+    const onLedger = !!t?.create_hash && t.status !== "FAILED";
+    const seg = segment(status, onLedger);
     const remaining = t?.cancel_after ? t.cancel_after + RIPPLE_EPOCH - now : null;
     return { ...p, t, s, status, amount, seg, hash: s?.hash || t?.action_hash || t?.create_hash, remaining };
   });
   const pending = rows.filter((r) => r.status === "RETURN_PENDING").length;
-  const locked = !!escrow?.tranches?.length && escrow.status !== "LOCKING";
+  const locked = !!escrow?.tranches?.length && escrow.status !== "LOCKING" && escrow.status !== "FAILED";
+  const everLocked = !!escrow?.tranches?.some((t) => t.create_hash && t.status !== "FAILED"); // money actually reached the ledger
+  const money = (v: string) => (everLocked ? `${rlusd(v)} RLUSD` : "—");
   return (
     <section className="card flex flex-col" data-testid="tranche-panel">
       <header className="card-head">
@@ -87,9 +93,9 @@ export default function ProofStrip({ escrow, settlement, payout, lcAmount, onLoc
       {payout && (
         <div className="mx-3 mb-3 grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center text-[11px]" data-testid="payout">
           <Stat label="m · Rungs Conceded" value={payout.refused ? "Refused" : String(payout.m)} />
-          <Stat label="Seller Receives" value={`${rlusd(payout.seller)} RLUSD`} tone="text-green-300" />
-          <Stat label="Platform Fee" value={`${rlusd(payout.platform)} RLUSD`} tone="text-amber-200" />
-          <Stat label="Returned to Buyer" value={`${rlusd(payout.buyer_returned)} RLUSD`} tone="text-slate-200" />
+          <Stat label="Seller Receives" value={money(payout.seller)} tone={everLocked ? "text-green-300" : "text-white/40"} />
+          <Stat label="Platform Fee" value={money(payout.platform)} tone={everLocked ? "text-amber-200" : "text-white/40"} />
+          <Stat label="Returned to Buyer" value={money(payout.buyer_returned)} tone={everLocked ? "text-slate-200" : "text-white/40"} />
         </div>
       )}
       {escrow?.error && <div className="mx-3 mb-3 rounded-btn border border-error/40 bg-error/10 p-2 text-xs text-red-200">{escrow.error}</div>}

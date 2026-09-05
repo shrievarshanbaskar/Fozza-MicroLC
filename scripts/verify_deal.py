@@ -80,6 +80,24 @@ def verify_deal(client: WebsocketClient, deal_id: str) -> bool:
 
     print(f"== {deal_id}  preset={state.get('preset')}  status={state.get('status')}  "
           f"k={exam.get('k')}  m={settlement.get('m')}  escrow={esc.get('status')} ==")
+
+    # "complete" means the money moved on the ledger: locked, then every tranche finished or returned by
+    # the settlement itself. A plan-only settlement, a failed lock or a pending sweep is not complete.
+    tranches = esc.get("tranches") or []
+    problems = []
+    if state.get("status") not in COMPLETED:
+        problems.append(f"deal status is {state.get('status')}, not SETTLED/REFUSED")
+    if esc.get("status") != "LOCKED" or len(tranches) != 7:
+        problems.append(f"escrow ladder not locked on ledger (escrow status {esc.get('status')}, {len(tranches)} tranches)")
+    if settlement.get("mode") != "ledger":
+        problems.append(f"settlement mode is {settlement.get('mode')!r}, not 'ledger' (payout never executed on chain)")
+    unfinished = [f"{t['name']}={t.get('status')}" for t in tranches if t.get("status") not in ("RELEASED", "RETURNED")]
+    if unfinished:
+        problems.append("tranches not finalised: " + ", ".join(unfinished))
+    for p in problems:
+        print(f"  FAIL {p}")
+    ok &= not problems
+
     hashes = collect_hashes(state)
     if not hashes:
         print("  no ledger hashes recorded")
@@ -130,14 +148,20 @@ def verify_deal(client: WebsocketClient, deal_id: str) -> bool:
 
 
 def completed_deal_ids() -> list[str]:
+    """Deals that claim completion and put an escrow ladder on the ledger. Refusals whose lock never
+    happened are listed as skipped: there is nothing on chain to verify."""
     ids = []
     for p in sorted(DEALS_DIR.glob("*/state.json")):
         try:
             st = json.loads(p.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        if st.get("status") in COMPLETED:
-            ids.append(p.parent.name)
+        if st.get("status") not in COMPLETED:
+            continue
+        if not ((st.get("escrow") or {}).get("tranches")):
+            print(f"skip {p.parent.name}: {st.get('status')} without a ledger lock (nothing on chain)")
+            continue
+        ids.append(p.parent.name)
     return ids
 
 

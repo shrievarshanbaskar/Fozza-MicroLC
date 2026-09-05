@@ -89,6 +89,17 @@ copy .env.example .env            # paste your GROQ_API_KEY; model ids live here
 It enables `asfAllowTrustLineLocking` (flag 17) on the issuer so RLUSD can be escrowed, and
 `asfDefaultRipple` so holders can pay each other.
 
+Top up the demo buyer between runs. Every lock parks 101% of the credit in escrow, and whatever the
+seller keeps leaves the buyer with less to spend next time. The lock step refuses to start when the
+buyer cannot cover 101% and tells you to run:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\topup_buyer.py     # mints from the test issuer until the buyer holds 100,000 RLUSD
+```
+
+`scripts\verify_deal.py <deal-id>` (or `--all`) is the read-only check that every hash a completed
+deal recorded is a validated `tesSUCCESS` transaction and that the stored payout equals `payout_for`.
+
 Run the three services in three terminals:
 
 ```powershell
