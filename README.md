@@ -77,7 +77,7 @@ hosted facilitator for offline tests or outages.
 Prerequisites: Python 3.13, Node 18+, a Groq API key, network access to XRPL testnet.
 
 ```powershell
-git clone https://github.com/<you>/Fozza-MicroLC.git
+git clone https://github.com/shrievarshanbaskar/Fozza-MicroLC.git
 cd Fozza-MicroLC
 py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
