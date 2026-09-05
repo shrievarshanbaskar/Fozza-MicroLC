@@ -75,7 +75,11 @@ TRUTH = {
 
 def _load_wallets() -> dict:
     p = Path(os.getenv("MICROLC_WALLETS", "state/wallets.json"))
-    return json.loads(p.read_text()) if p.exists() else {}
+    if p.exists():
+        return json.loads(p.read_text())
+    if os.getenv("WALLETS_JSON"):  # hosted deployments carry the wallet set in the environment
+        return json.loads(os.environ["WALLETS_JSON"])
+    return {}
 
 
 def make_app(pay_to: Optional[str] = None, issuer: Optional[str] = None, signer: Optional[Wallet] = None,
@@ -150,4 +154,6 @@ def verify_signature(body: dict) -> bool:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(make_app(simulate_latency=True), host="127.0.0.1", port=int(os.getenv("ORACLE_PORT", "8001")))
+    # hosted platforms inject PORT and need 0.0.0.0; locally stay on the loopback interface
+    uvicorn.run(make_app(simulate_latency=True), host=os.getenv("ORACLE_HOST", "127.0.0.1"),
+                port=int(os.getenv("PORT", os.getenv("ORACLE_PORT", "8001"))))

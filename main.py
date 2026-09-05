@@ -39,7 +39,7 @@ from settlement_engine import (REFUSED_M, Deal, InsufficientFunds, SettlementEng
                                normalize_m, payout_for, payout_table, total_locked)
 from ucp_articles import ARTICLES  # noqa: E402
 from verifier_agent import BudgetGuard, OracleClient, make_verifier  # noqa: E402
-from xrpl_escrow import EXPLORER_ACCOUNT, EXPLORER_TX, LedgerClient, load_wallets, ripple_now  # noqa: E402
+from xrpl_escrow import EXPLORER_ACCOUNT, EXPLORER_TX, LedgerClient, load_wallets, ripple_now, wallets_available  # noqa: E402
 
 from scripts.topup_buyer import top_up  # noqa: E402
 
@@ -59,7 +59,7 @@ _lock = threading.Lock()
 # --------------------------------------------------------------------------- wallets / ledger
 def _wallets() -> Optional[dict]:
     p = STATE / "wallets.json"
-    return load_wallets(str(p)) if p.exists() else None
+    return load_wallets(str(p)) if wallets_available(str(p)) else None
 
 
 def _ledger() -> LedgerClient:
@@ -530,4 +530,5 @@ def balances():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=int(os.getenv("API_PORT", "8000")))
+    # hosted platforms inject PORT and need 0.0.0.0; locally stay on the loopback interface
+    uvicorn.run(app, host=os.getenv("API_HOST", "127.0.0.1"), port=int(os.getenv("PORT", os.getenv("API_PORT", "8000"))))

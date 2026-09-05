@@ -369,9 +369,22 @@ def _parse_hash(msg: str) -> str:
     return ""
 
 
+def wallets_available(path: str = "state/wallets.json") -> bool:
+    """True when wallets can be loaded from the file or from the WALLETS_JSON environment variable."""
+    import os
+    return os.path.exists(path) or bool(os.getenv("WALLETS_JSON"))
+
+
 def load_wallets(path: str = "state/wallets.json") -> dict:
+    """Load the demo wallet set. On a hosted server with no disk state, WALLETS_JSON holds the same JSON."""
     import json
-    with open(path) as f:
-        data = json.load(f)
+    import os
+    if os.path.exists(path):
+        with open(path) as f:
+            data = json.load(f)
+    elif os.getenv("WALLETS_JSON"):
+        data = json.loads(os.environ["WALLETS_JSON"])
+    else:
+        raise FileNotFoundError(f"{path} not found and WALLETS_JSON is not set; run scripts/bootstrap_wallets.py")
     data["_wallets"] = {name: Wallet.from_seed(w["seed"]) for name, w in data["wallets"].items()}
     return data

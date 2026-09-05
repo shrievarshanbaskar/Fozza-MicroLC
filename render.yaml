@@ -1,0 +1,57 @@
+# Render Blueprint: the two Python services behind the Vercel-hosted frontend.
+# Dashboard -> New -> Blueprint -> pick this repo. Fill the sync:false values when prompted.
+# Testnet demo deployment: deal state lives on the service's ephemeral disk and resets on redeploy.
+services:
+  - type: web
+    name: microlc-oracle
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m oracle.service
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.12"
+      - key: ORACLE_HOST
+        value: "0.0.0.0"
+      - key: XRPL_RPC_URL
+        value: https://s.altnet.rippletest.net:51234/
+      - key: XRPL_NETWORK
+        value: xrpl:1
+      - key: XRPL_FACILITATOR_URL
+        value: https://xrpl-facilitator-testnet.t54.ai
+      - key: WALLETS_JSON          # paste the full contents of state/wallets.json (kept secret by Render)
+        sync: false
+
+  - type: web
+    name: microlc-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/env
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.12"
+      - key: XRPL_RPC_URL
+        value: https://s.altnet.rippletest.net:51234/
+      - key: XRPL_WS_URL
+        value: wss://s.altnet.rippletest.net:51233
+      - key: XRPL_NETWORK
+        value: xrpl:1
+      - key: XRPL_FACILITATOR_URL
+        value: https://xrpl-facilitator-testnet.t54.ai
+      - key: ESCROW_EXPIRY_SECONDS
+        value: "180"
+      - key: DEMO_AUTO_TOPUP
+        value: "true"
+      - key: GROQ_SMALL_MODEL
+        value: openai/gpt-oss-20b
+      - key: GROQ_LARGE_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_API_KEY         # your Groq key
+        sync: false
+      - key: WALLETS_JSON         # same value as on the oracle service
+        sync: false
+      - key: ORACLE_URL           # the oracle service URL once it is live, e.g. https://microlc-oracle.onrender.com
+        sync: false

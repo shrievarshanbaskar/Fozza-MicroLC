@@ -102,6 +102,13 @@ to start when the buyer cannot cover 101% and tells you to run:
 `scripts\verify_deal.py <deal-id>` (or `--all`) is the read-only check that every hash a completed
 deal recorded is a validated `tesSUCCESS` transaction and that the stored payout equals `payout_for`.
 
+**Hosted demo.** The frontend deploys to Vercel with Root Directory `frontend` and
+`NEXT_PUBLIC_API_URL` pointing at the API. The API and oracle are ordinary long-running Python
+services; `render.yaml` describes both for Render (Blueprint). They read the wallet set from the
+`WALLETS_JSON` environment variable when `state/wallets.json` is absent, so no seed file is shipped.
+Deal state on a hosted service is ephemeral and resets on redeploy; the proof archive in `proof/` is
+what the landing page reads and is committed.
+
 Run the three services in three terminals:
 
 ```powershell
